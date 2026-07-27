@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BSLSK Division-9 Database</title>
+
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <!-- CRT Overlay -->
+    <div id="crt-overlay"></div>
+
+    <!-- Terminal -->
+    <main id="terminal">
+
+        <!-- Header -->
+        <header id="terminal-header">
+            <span class="status">BSLSK DIVISION-9</span>
+            <span class="divider">|</span>
+            <span class="status">DATABASE TERMINAL</span>
+            <span class="divider">|</span>
+            <span id="connection-status">OFFLINE</span>
+        </header>
+
+        <!-- Output -->
+        <section id="terminal-output"></section>
+
+        <!-- Input -->
+        <footer id="terminal-input">
+
+            <span id="prompt">
+                >
+            </span>
+
+            <input
+                id="command-input"
+                type="text"
+                autocomplete="off"
+                spellcheck="false"
+                autofocus
+            />
+
+        </footer>
+
+    </main>
+
+    <!-- Hidden audio -->
+    <audio id="keypress"></audio>
+    <audio id="success"></audio>
+    <audio id="error"></audio>
+
+    <!-- Scripts -->
+    <script src="database.js"></script>
+    <script src="terminal.js"></script>
+
+</body>
+</html>
