@@ -363,14 +363,14 @@ function login(user,pass){
 
 
     if(
-        user === "veil"
+        user === "div9"
         &&
-        pass === "covet248"
+        pass === "exo248"
     ){
 
         isLoggedIn=true;
 
-        currentUser="VEIL";
+        currentUser="DIV9_GUEST";
 
 
         status.innerText="SECURE";
@@ -389,7 +389,7 @@ function login(user,pass){
             );
 
             printLine(
-            "Welcome Operator VEIL."
+            "Welcome DIV9_GUEST."
             );
 
         },700);
