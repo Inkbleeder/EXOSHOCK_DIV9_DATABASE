@@ -272,6 +272,10 @@ async function execute(text){
                 );
 
                 printLine(
+                "category <name>"
+                );
+
+                printLine(
                 "whoami"
                 );
 
@@ -326,6 +330,16 @@ async function execute(text){
         case "read":
 
             readEntry(
+                args.slice(1).join(" ")
+            );
+
+        break;
+
+
+
+        case "category":
+
+            categoryCommand(
                 args.slice(1).join(" ")
             );
 
@@ -507,7 +521,7 @@ function databaseCommand(){
     Object.keys(database).forEach(entry=>{
 
         printLine(
-        `[${entry.toUpperCase()}]`
+        `[${entry.toUpperCase()}] - ${database[entry].category.toUpperCase()}`
         );
 
     });
@@ -566,8 +580,86 @@ async function readEntry(name){
 
 
     printLine(
-    database[name]
+    database[name].content
     );
+
+}
+
+
+
+/*
+===========================================================
+CATEGORY SEARCH
+===========================================================
+*/
+
+
+function categoryCommand(name){
+
+
+    if(!isLoggedIn){
+
+        printLine(
+        "ERROR: LOGIN REQUIRED",
+        "error"
+        );
+
+        return;
+
+    }
+
+
+
+    if(name===""){
+
+        printLine(
+        "USAGE: category <name>",
+        "error"
+        );
+
+        return;
+
+    }
+
+
+
+    let matches = Object.keys(database).filter(entry=>
+
+        database[entry].category.toLowerCase()
+        ===
+        name.toLowerCase()
+
+    );
+
+
+
+    if(matches.length===0){
+
+        printLine(
+        "NO ENTRIES FOUND UNDER THAT CATEGORY",
+        "error"
+        );
+
+        return;
+
+    }
+
+
+
+    printLine(
+    `CATEGORY: ${name.toUpperCase()}`,
+    "success"
+    );
+
+
+    matches.forEach(entry=>{
+
+        printLine(
+        `[${entry.toUpperCase()}]`
+        );
+
+    });
+
 
 }
 
