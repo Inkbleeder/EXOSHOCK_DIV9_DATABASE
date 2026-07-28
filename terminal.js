@@ -268,11 +268,7 @@ async function execute(text){
                 );
 
                 printLine(
-                "read <entry>"
-                );
-
-                printLine(
-                "category <name>"
+                "read <entry / category>"
                 );
 
                 printLine(
@@ -330,16 +326,6 @@ async function execute(text){
         case "read":
 
             readEntry(
-                args.slice(1).join(" ")
-            );
-
-        break;
-
-
-
-        case "category":
-
-            categoryCommand(
                 args.slice(1).join(" ")
             );
 
@@ -513,15 +499,24 @@ function databaseCommand(){
 
 
     printLine(
-    "DATABASE INDEX:",
+    "DATABASE INDEX - CATEGORIES:",
     "success"
     );
 
 
-    Object.keys(database).forEach(entry=>{
+    let categories = [...new Set(
+
+        Object.values(database).map(
+            entry => entry.category
+        )
+
+    )];
+
+
+    categories.forEach(cat=>{
 
         printLine(
-        `[${entry.toUpperCase()}] - ${database[entry].category.toUpperCase()}`
+        `[${cat.toUpperCase()}]`
         );
 
     });
@@ -549,6 +544,35 @@ async function readEntry(name){
 
 
     if(!database[name]){
+
+
+        let matches = Object.keys(database).filter(entry=>
+
+            database[entry].category.toLowerCase()
+            ===
+            name.toLowerCase()
+
+        );
+
+
+        if(matches.length > 0){
+
+            printLine(
+            `CATEGORY: ${name.toUpperCase()}`,
+            "success"
+            );
+
+            matches.forEach(entry=>{
+
+                printLine(
+                `[${entry.toUpperCase()}]`
+                );
+
+            });
+
+            return;
+
+        }
 
 
         printLine(
@@ -582,84 +606,6 @@ async function readEntry(name){
     printLine(
     database[name].content
     );
-
-}
-
-
-
-/*
-===========================================================
-CATEGORY SEARCH
-===========================================================
-*/
-
-
-function categoryCommand(name){
-
-
-    if(!isLoggedIn){
-
-        printLine(
-        "ERROR: LOGIN REQUIRED",
-        "error"
-        );
-
-        return;
-
-    }
-
-
-
-    if(name===""){
-
-        printLine(
-        "USAGE: category <name>",
-        "error"
-        );
-
-        return;
-
-    }
-
-
-
-    let matches = Object.keys(database).filter(entry=>
-
-        database[entry].category.toLowerCase()
-        ===
-        name.toLowerCase()
-
-    );
-
-
-
-    if(matches.length===0){
-
-        printLine(
-        "NO ENTRIES FOUND UNDER THAT CATEGORY",
-        "error"
-        );
-
-        return;
-
-    }
-
-
-
-    printLine(
-    `CATEGORY: ${name.toUpperCase()}`,
-    "success"
-    );
-
-
-    matches.forEach(entry=>{
-
-        printLine(
-        `[${entry.toUpperCase()}]`
-        );
-
-    });
-
 
 }
 
