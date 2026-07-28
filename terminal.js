@@ -53,28 +53,39 @@ async function bootSequence(){
 
     await printLine("");
 
-    await printLine(
-        "CONNECTION ESTABLISHED",
-        "success"
-    );
+await printLine(
+    "CONNECTION ESTABLISHED",
+    "success"
+);
 
-    await printLine(
-        "RESTRICTED TERMINAL ACCESS",
-        "warning"
-    );
+await printLine(
+    "RESTRICTED TERMINAL ACCESS",
+    "warning"
+);
 
-    await printLine("");
+await printLine("");
 
-    await printLine(
-        "Type 'login <username> <password>'",
-        "system"
-    );
+await printLine(
+    "Guest Credentials",
+    "warning"
+);
 
-    await printLine(
-        "Guest Access Available: veil / covet248",
-        "system"
-    );
+await printLine(
+    "Username : div9",
+    "system"
+);
 
+await printLine(
+    "Password : exo248",
+    "system"
+);
+
+await printLine("");
+
+await printLine(
+    "Type 'login <username> <password>'",
+    "system"
+);
 
     status.innerText = "ONLINE";
     status.className = "success";
