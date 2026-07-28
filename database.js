@@ -21,8 +21,11 @@ ZETA-1 VEIL
 ===========================================================
 */
 
-"zeta-1 veil":
+"zeta-1 veil": {
 
+category: "Factions",
+
+content:
 `
 FILE ID: ZETA-1 VEIL
 
@@ -108,7 +111,9 @@ Rumors of continued operation remain common among
 standardized squads.
 
 No official evidence has confirmed these claims.
-`,
+`
+
+},
 
 
 
@@ -121,8 +126,11 @@ DEATHSEEKERS
 */
 
 
-"deathseekers":
+"deathseekers": {
 
+category: "Factions",
+
+content:
 `
 FILE ID: DEATHSEEKERS
 
@@ -182,7 +190,9 @@ Maintain order.
 Remove threats.
 
 Complete objectives regardless of cost.
-`,
+`
+
+},
 
 
 
@@ -195,8 +205,11 @@ PROJECT COVET
 */
 
 
-"project covet":
+"project covet": {
 
+category: "Projects",
+
+content:
 `
 FILE ID: PROJECT COVET
 
@@ -230,6 +243,8 @@ Recovery attempt failed.
 
 Further access requires administrator clearance.
 `
+
+}
 
 
 
