@@ -15,11 +15,15 @@ HOW TO ADD A NEW ENTRY:
 Copy this block, paste it inside the database object,
 and fill it in. A brand new category name (anything you
 type) automatically becomes a real, searchable category -
-there is no separate list to update.
+there is no separate list to update. The same goes for
+subcategory - it's entirely optional, and typing any new
+name for it automatically creates that subcategory too.
 
 "your entry key": {
 
     category: "Category Name",
+
+    subcategory: "Optional Subcategory Name",
 
     locked: false,
 
@@ -29,6 +33,22 @@ there is no separate list to update.
     `
 
 },
+
+Leave out the "subcategory" line entirely if an entry
+doesn't need one - it'll just show up directly under its
+main category like before, no different than today.
+
+Typing 'database' in the terminal will then show:
+
+[CATEGORY NAME]
+    [OPTIONAL SUBCATEGORY NAME]
+    N FILES
+    N HIDDEN / LOCKED
+
+Typing 'read <category name>' lists every entry in that
+category (regardless of subcategory).
+Typing 'read <subcategory name>' lists only the entries in
+that specific subcategory.
 ---------------------------------------------------------
 ===========================================================
 */
