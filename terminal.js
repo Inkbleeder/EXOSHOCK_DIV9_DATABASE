@@ -352,6 +352,7 @@ const TYPE_SPEED = 12; // milliseconds per character
 
 let printQueue = [];
 let isPrinting = false;
+let fastForward = false;
 
 
 function printLine(text, type=""){
@@ -388,6 +389,14 @@ async function processQueue(){
 
         for(let i=0; i<=item.text.length; i++){
 
+            if(fastForward){
+
+                line.textContent = item.text;
+
+                break;
+
+            }
+
             line.textContent = item.text.slice(0,i);
 
             feed.scrollTop = feed.scrollHeight;
@@ -396,12 +405,16 @@ async function processQueue(){
 
         }
 
+        feed.scrollTop = feed.scrollHeight;
+
 
         item.resolve();
 
     }
 
     isPrinting = false;
+
+    fastForward = false;
 
 }
 
@@ -456,6 +469,14 @@ INPUT HANDLING
 */
 
 
+let commandHistory = [];
+let historyIndex = -1;
+
+let tabMatches = [];
+let tabIndex = -1;
+let tabBase = null;
+
+
 input.addEventListener(
 "keydown",
 async function(event){
@@ -466,9 +487,78 @@ async function(event){
     registerActivity();
 
 
+    // Any keypress while text is still typing out instantly
+    // completes everything currently queued, instead of making
+    // the user wait for the animation to finish.
+    if(isPrinting){
+
+        fastForward = true;
+
+        if(event.key === "Enter"){
+
+            // Don't let the same Enter press that skipped the
+            // animation also submit whatever's in the input box.
+            event.preventDefault();
+
+            return;
+
+        }
+
+    }
+
+
+    if(event.key === "ArrowUp"){
+
+        event.preventDefault();
+
+        if(commandHistory.length === 0) return;
+
+        historyIndex = Math.max(historyIndex - 1, 0);
+
+        this.value = commandHistory[historyIndex];
+
+        this.setSelectionRange(this.value.length, this.value.length);
+
+        return;
+
+    }
+
+
+    if(event.key === "ArrowDown"){
+
+        event.preventDefault();
+
+        if(commandHistory.length === 0) return;
+
+        historyIndex = Math.min(historyIndex + 1, commandHistory.length);
+
+        this.value = commandHistory[historyIndex] || "";
+
+        this.setSelectionRange(this.value.length, this.value.length);
+
+        return;
+
+    }
+
+
+    if(event.key === "Tab"){
+
+        event.preventDefault();
+
+        autoComplete(this);
+
+        return;
+
+    }
+
+
     if(event.key !== "Enter"){
 
         playSound("keypress");
+
+        // Any other key cancels an in-progress tab-cycle, so the
+        // next Tab press starts a fresh match from what's typed.
+        tabBase = null;
 
         return;
 
@@ -488,6 +578,13 @@ async function(event){
     );
 
 
+    commandHistory.push(commandLine);
+
+    historyIndex = commandHistory.length;
+
+    tabBase = null;
+
+
     this.value="";
 
 
@@ -495,6 +592,80 @@ async function(event){
 
 
 });
+
+
+
+
+/*
+===========================================================
+TAB COMPLETION
+
+Only completes the argument after "read " - matches against
+every entry key, category, and subcategory name. Pressing
+Tab repeatedly cycles through multiple matches.
+===========================================================
+*/
+
+function autoComplete(el){
+
+    let value = el.value;
+
+    let parts = value.split(" ");
+
+
+    if(parts[0].toLowerCase() !== "read") return;
+
+
+    let query = parts.slice(1).join(" ").toLowerCase();
+
+
+    let names = new Set();
+
+    Object.keys(database).forEach(key=>names.add(key));
+
+    Object.values(database).forEach(entry=>{
+
+        names.add(entry.category.toLowerCase());
+
+        if(entry.subcategory){
+
+            names.add(entry.subcategory.toLowerCase());
+
+        }
+
+    });
+
+
+    let candidates = [...names]
+
+        .filter(name => name.startsWith(query))
+
+        .sort();
+
+
+    if(candidates.length === 0) return;
+
+
+    if(tabBase !== query){
+
+        tabBase = query;
+
+        tabMatches = candidates;
+
+        tabIndex = 0;
+
+    }
+
+    else{
+
+        tabIndex = (tabIndex + 1) % tabMatches.length;
+
+    }
+
+
+    el.value = "read " + tabMatches[tabIndex];
+
+}
 
 
 
