@@ -148,15 +148,13 @@ body::before{
 
     line-height:1.55;
 
-    scrollbar-width:thin;
+    scrollbar-width:none;
+
+    -ms-overflow-style:none;
 }
 
 #terminal-output::-webkit-scrollbar{
-    width:10px;
-}
-
-#terminal-output::-webkit-scrollbar-thumb{
-    background:rgba(0,255,100,.2);
+    display:none;
 }
 
 /* ===========================================================
