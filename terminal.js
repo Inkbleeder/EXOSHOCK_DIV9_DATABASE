@@ -62,7 +62,8 @@ const SOUND_FILES = {
     loginerror:     "audio/loginerror.wav",
     ambience:       "audio/ambience.wav",
     loginsuccess:   "audio/loginsuccess.wav",
-    success:        "audio/success.wav"
+    success:        "audio/success.wav",
+    idle:           "audio/idle.wav"
 
 };
 
@@ -74,7 +75,8 @@ const SOUND_VOLUME = {
     loginerror:     1,
     ambience:       0.25,
     loginsuccess:   1,
-    success:        1
+    success:        1,
+    idle:           1
 
 };
 
@@ -458,6 +460,8 @@ async function(event){
 
 
     startAmbience();
+
+    registerActivity();
 
 
     if(event.key !== "Enter"){
@@ -1274,6 +1278,211 @@ async function petrifyEvent(){
 
 /*
 ===========================================================
+IDLE BANNER
+
+After IDLE_MS of no activity, a large ASCII logo fades in
+and bounces around the screen like an old DVD screensaver -
+but only if the terminal is currently empty (i.e. the
+"clear" command has been used). Any keypress or click
+dismisses it immediately and restarts the countdown.
+
+To use a different logo, just replace the IDLE_BANNER string
+below with any plain-text ASCII art (e.g. from an online
+"figlet" generator) - no special format required.
+===========================================================
+*/
+
+const IDLE_MS = 1 * 60 * 1000; // 1 minute
+
+const IDLE_BANNER_DURATION = 9000; // how long it stays on screen (ms)
+
+const IDLE_BANNER_SPEED = 90; // pixels per second
+
+const idleBannerEl   = document.getElementById("idle-banner");
+const idleBannerText = document.getElementById("idle-banner-text");
+
+const IDLE_BANNER =
+`####  ##### #     ##### #   #    ####  ##### #   #       ####  
+#   # #     #     #     #  #     #   #   #   #   #       #   # 
+####  ##### #     ##### ###      #   #   #   #   # ##### ####  
+#   #     # #         # #  #     #   #   #   #   #           # 
+#   #     # #         # #   #    #   #   #    # #            # 
+####  ##### ##### ##### #   #    ####  #####   #         ####  `;
+
+let lastActivity = Date.now();
+let idleBannerVisible = false;
+let idleBannerHideTimeout = null;
+let idleBounceFrame = null;
+
+let bounceX = 0;
+let bounceY = 0;
+let bounceVX = IDLE_BANNER_SPEED;
+let bounceVY = IDLE_BANNER_SPEED;
+let lastFrameTime = 0;
+
+
+function registerActivity(){
+
+    lastActivity = Date.now();
+
+    if(idleBannerVisible){
+
+        hideIdleBanner();
+
+    }
+
+}
+
+
+function showIdleBanner(){
+
+    idleBannerVisible = true;
+
+    // Treat showing the banner as activity too, so it doesn't
+    // immediately re-trigger and instead waits another full
+    // IDLE_MS before it can appear again.
+    lastActivity = Date.now();
+
+    idleBannerText.textContent = IDLE_BANNER;
+
+    idleBannerEl.classList.add("visible");
+
+    playSound("idle");
+
+
+    // Start somewhere on screen, moving in a random direction.
+    let bannerRect = idleBannerText.getBoundingClientRect();
+
+    bounceX = Math.random() * Math.max(window.innerWidth  - bannerRect.width,  0);
+    bounceY = Math.random() * Math.max(window.innerHeight - bannerRect.height, 0);
+
+    let angle = Math.random() * Math.PI * 2;
+
+    bounceVX = Math.cos(angle) * IDLE_BANNER_SPEED;
+    bounceVY = Math.sin(angle) * IDLE_BANNER_SPEED;
+
+    lastFrameTime = performance.now();
+
+    idleBounceFrame = requestAnimationFrame(stepBounce);
+
+    idleBannerHideTimeout = setTimeout(hideIdleBanner, IDLE_BANNER_DURATION);
+
+}
+
+
+function stepBounce(now){
+
+    let dt = (now - lastFrameTime) / 1000;
+
+    lastFrameTime = now;
+
+
+    let bannerRect = idleBannerText.getBoundingClientRect();
+
+    let maxX = window.innerWidth  - bannerRect.width;
+    let maxY = window.innerHeight - bannerRect.height;
+
+
+    bounceX += bounceVX * dt;
+    bounceY += bounceVY * dt;
+
+
+    if(bounceX <= 0){
+
+        bounceX = 0;
+
+        bounceVX = Math.abs(bounceVX);
+
+    }
+    else if(bounceX >= maxX){
+
+        bounceX = maxX;
+
+        bounceVX = -Math.abs(bounceVX);
+
+    }
+
+
+    if(bounceY <= 0){
+
+        bounceY = 0;
+
+        bounceVY = Math.abs(bounceVY);
+
+    }
+    else if(bounceY >= maxY){
+
+        bounceY = maxY;
+
+        bounceVY = -Math.abs(bounceVY);
+
+    }
+
+
+    idleBannerText.style.transform =
+        `translate(${bounceX}px, ${bounceY}px)`;
+
+
+    if(idleBannerVisible){
+
+        idleBounceFrame = requestAnimationFrame(stepBounce);
+
+    }
+
+}
+
+
+function hideIdleBanner(){
+
+    idleBannerVisible = false;
+
+    idleBannerEl.classList.remove("visible");
+
+    if(idleBannerHideTimeout){
+
+        clearTimeout(idleBannerHideTimeout);
+
+        idleBannerHideTimeout = null;
+
+    }
+
+    if(idleBounceFrame){
+
+        cancelAnimationFrame(idleBounceFrame);
+
+        idleBounceFrame = null;
+
+    }
+
+}
+
+
+setInterval(()=>{
+
+    let idleFor = Date.now() - lastActivity;
+
+    let screenIsClear = feed.children.length === 0;
+
+    if(
+
+        !idleBannerVisible
+        &&
+        screenIsClear
+        &&
+        idleFor >= IDLE_MS
+
+    ){
+
+        showIdleBanner();
+
+    }
+
+}, 3000);
+
+
+
+/*
+===========================================================
 CLICK TO FOCUS
 ===========================================================
 */
@@ -1284,5 +1493,7 @@ document.body.onclick=()=>{
     input.focus();
 
     startAmbience();
+
+    registerActivity();
 
 };
