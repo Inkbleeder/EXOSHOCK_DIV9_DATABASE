@@ -52,7 +52,9 @@ const sounds = {
 
     error: document.getElementById("error"),
 
-    loginerror: document.getElementById("loginerror")
+    loginerror: document.getElementById("loginerror"),
+
+    ambience: document.getElementById("ambience")
 
 };
 
@@ -61,6 +63,26 @@ sounds.keypress.src   = "audio/keypress.wav";
 sounds.success.src    = "audio/success.wav";
 sounds.error.src      = "audio/error.wav";
 sounds.loginerror.src = "audio/loginerror.wav";
+sounds.ambience.src   = "audio/ambience.wav";
+
+
+// If a wav file is missing, misnamed, or in a format the
+// browser can't decode, log which one so it's easy to spot
+// instead of failing completely silently.
+Object.keys(sounds).forEach(name=>{
+
+    sounds[name].addEventListener("error", ()=>{
+
+        console.warn(
+
+            `[audio] "${name}" failed to load - check that ` +
+            `audio/${name}.wav exists and is a valid wav file.`
+
+        );
+
+    });
+
+});
 
 
 function playSound(name){
@@ -69,13 +91,63 @@ function playSound(name){
 
     if(!sound) return;
 
-    sound.currentTime = 0;
+    try{
 
-    // play() returns a promise that rejects if the browser
-    // blocks autoplay (e.g. before the user has interacted
-    // with the page yet) - catch it so it fails silently
-    // instead of throwing console errors.
-    sound.play().catch(()=>{});
+        sound.currentTime = 0;
+
+        // play() returns a promise that rejects if the browser
+        // blocks autoplay (e.g. before the user has interacted
+        // with the page yet) - catch it so it fails silently
+        // instead of throwing console errors.
+        sound.play().catch(()=>{});
+
+    }
+
+    catch(err){
+
+        // Some browsers throw synchronously if the audio isn't
+        // loaded/seekable yet. Fall back to just calling play()
+        // without resetting currentTime rather than aborting.
+        sound.play().catch(()=>{});
+
+    }
+
+}
+
+
+
+/*
+===========================================================
+BACKGROUND AMBIENCE
+
+A quiet looping track that starts on the user's first
+interaction with the page (browsers block audio from
+autoplaying before that). Adjust AMBIENCE_VOLUME below to
+taste - 0 is silent, 1 is full volume.
+===========================================================
+*/
+
+const AMBIENCE_VOLUME = 0.25;
+
+let ambienceStarted = false;
+
+sounds.ambience.loop = true;
+sounds.ambience.volume = AMBIENCE_VOLUME;
+
+
+function startAmbience(){
+
+    if(ambienceStarted) return;
+
+    ambienceStarted = true;
+
+    sounds.ambience.play().catch(()=>{
+
+        // Autoplay still blocked (rare) - try again on the
+        // next interaction instead of giving up permanently.
+        ambienceStarted = false;
+
+    });
 
 }
 
@@ -359,6 +431,9 @@ INPUT HANDLING
 input.addEventListener(
 "keydown",
 async function(event){
+
+
+    startAmbience();
 
 
     if(event.key !== "Enter"){
@@ -1069,5 +1144,7 @@ CLICK TO FOCUS
 document.body.onclick=()=>{
 
     input.focus();
+
+    startAmbience();
 
 };
