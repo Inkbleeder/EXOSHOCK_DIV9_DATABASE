@@ -570,6 +570,15 @@ async function execute(text){
                 "clear"
                 );
 
+                if(isAdmin){
+
+                    printLine(
+                    "forceidle",
+                    "warning"
+                    );
+
+                }
+
             }
 
         break;
@@ -625,6 +634,14 @@ async function execute(text){
         case "petrify":
 
             petrifyEvent();
+
+        break;
+
+
+
+        case "forceidle":
+
+            forceIdleCommand();
 
         break;
 
@@ -1278,6 +1295,41 @@ async function petrifyEvent(){
 
 /*
 ===========================================================
+FORCE IDLE (admin-only)
+
+Manually triggers the idle banner on demand, bypassing the
+IDLE_MS wait and the "screen must be empty" requirement.
+Only works for the true admin account (isAdmin) - basilisk's
+clearance does not grant this.
+===========================================================
+*/
+
+function forceIdleCommand(){
+
+    if(!isAdmin){
+
+        printLine(
+        "UNKNOWN COMMAND",
+        "error"
+        );
+
+        return;
+
+    }
+
+    printLine(
+    "FORCING IDLE BANNER",
+    "warning"
+    );
+
+    showIdleBanner();
+
+}
+
+
+
+/*
+===========================================================
 IDLE BANNER
 
 After IDLE_MS of no activity, a large ASCII logo fades in
@@ -1294,24 +1346,21 @@ below with any plain-text ASCII art (e.g. from an online
 
 const IDLE_MS = 1 * 60 * 1000; // 1 minute
 
-const IDLE_BANNER_DURATION = 9000; // how long it stays on screen (ms)
-
 const IDLE_BANNER_SPEED = 90; // pixels per second
 
 const idleBannerEl   = document.getElementById("idle-banner");
 const idleBannerText = document.getElementById("idle-banner-text");
 
 const IDLE_BANNER =
-`####  ##### #     ##### #   #    ####  ##### #   #       ####  
-#   # #     #     #     #  #     #   #   #   #   #       #   # 
-####  ##### #     ##### ###      #   #   #   #   # ##### ####  
-#   #     # #         # #  #     #   #   #   #   #           # 
-#   #     # #         # #   #    #   #   #    # #            # 
-####  ##### ##### ##### #   #    ####  #####   #         ####  `;
+`████  █████ █     █████ █   █    ████  █████ █   █       ████  
+█   █ █     █     █     █  █     █   █   █   █   █       █   █ 
+████  █████ █     █████ ███      █   █   █   █   █ █████ ████  
+█   █     █ █         █ █  █     █   █   █   █   █           █ 
+█   █     █ █         █ █   █    █   █   █    █ █            █ 
+████  █████ █████ █████ █   █    ████  █████   █         ████  `;
 
 let lastActivity = Date.now();
 let idleBannerVisible = false;
-let idleBannerHideTimeout = null;
 let idleBounceFrame = null;
 
 let bounceX = 0;
@@ -1350,11 +1399,22 @@ function showIdleBanner(){
     playSound("idle");
 
 
-    // Start somewhere on screen, moving in a random direction.
+    // Confine the banner to the console's own box, not the whole
+    // browser window - position and size the banner container to
+    // exactly match #terminal, then clip anything outside it.
+    let terminalRect = document.getElementById("terminal").getBoundingClientRect();
+
+    idleBannerEl.style.left   = terminalRect.left   + "px";
+    idleBannerEl.style.top    = terminalRect.top    + "px";
+    idleBannerEl.style.width  = terminalRect.width  + "px";
+    idleBannerEl.style.height = terminalRect.height + "px";
+
+
+    // Start somewhere inside the console, moving in a random direction.
     let bannerRect = idleBannerText.getBoundingClientRect();
 
-    bounceX = Math.random() * Math.max(window.innerWidth  - bannerRect.width,  0);
-    bounceY = Math.random() * Math.max(window.innerHeight - bannerRect.height, 0);
+    bounceX = Math.random() * Math.max(terminalRect.width  - bannerRect.width,  0);
+    bounceY = Math.random() * Math.max(terminalRect.height - bannerRect.height, 0);
 
     let angle = Math.random() * Math.PI * 2;
 
@@ -1364,8 +1424,6 @@ function showIdleBanner(){
     lastFrameTime = performance.now();
 
     idleBounceFrame = requestAnimationFrame(stepBounce);
-
-    idleBannerHideTimeout = setTimeout(hideIdleBanner, IDLE_BANNER_DURATION);
 
 }
 
@@ -1377,10 +1435,18 @@ function stepBounce(now){
     lastFrameTime = now;
 
 
+    let terminalRect = document.getElementById("terminal").getBoundingClientRect();
+
+    idleBannerEl.style.left   = terminalRect.left   + "px";
+    idleBannerEl.style.top    = terminalRect.top    + "px";
+    idleBannerEl.style.width  = terminalRect.width  + "px";
+    idleBannerEl.style.height = terminalRect.height + "px";
+
+
     let bannerRect = idleBannerText.getBoundingClientRect();
 
-    let maxX = window.innerWidth  - bannerRect.width;
-    let maxY = window.innerHeight - bannerRect.height;
+    let maxX = terminalRect.width  - bannerRect.width;
+    let maxY = terminalRect.height - bannerRect.height;
 
 
     bounceX += bounceVX * dt;
@@ -1437,14 +1503,6 @@ function hideIdleBanner(){
     idleBannerVisible = false;
 
     idleBannerEl.classList.remove("visible");
-
-    if(idleBannerHideTimeout){
-
-        clearTimeout(idleBannerHideTimeout);
-
-        idleBannerHideTimeout = null;
-
-    }
 
     if(idleBounceFrame){
 
