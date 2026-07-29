@@ -324,6 +324,39 @@ body::before{
 
 }
 
+/* ===========================================================
+   Account Themes
+
+   Applied to <body> by terminal.js on login (theme-div9guest,
+   theme-admin, theme-basilisk). Overrides the CSS variables
+   from :root, which everything else in this file already
+   references - so the whole terminal recolors automatically.
+   =========================================================== */
+
+body.theme-div9guest{
+
+    --green:#00ff66;
+    --green-dim:#00bb55;
+    --border:rgba(0,255,100,.35);
+
+}
+
+body.theme-admin{
+
+    --green:#ff5c3d;
+    --green-dim:#cc4630;
+    --border:rgba(255,92,61,.35);
+
+}
+
+body.theme-basilisk{
+
+    --green:#b26bff;
+    --green-dim:#8a4fd1;
+    --border:rgba(178,107,255,.35);
+
+}
+
 @keyframes glitch{
 
     0%{
