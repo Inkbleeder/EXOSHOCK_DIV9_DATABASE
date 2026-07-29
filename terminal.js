@@ -30,40 +30,67 @@ AUDIO
 
 Drop your .wav files into an /audio folder next to
 index.html, using these filenames (or change the paths
-below to match whatever you name them):
+below to match whatever you name them).
 
-  audio/startup.wav    -> plays once when the terminal boots
-  audio/keypress.wav   -> plays once per keystroke
-  audio/success.wav    -> plays on successful login / credits
-  audio/error.wav      -> plays on general errors (unknown
-                          command, file not found, must-login)
-  audio/loginerror.wav -> plays specifically on failed login
-                          (wrong username/password)
+Volume for each sound is controlled by SOUND_VOLUME below -
+edit any number there (0 = silent, 1 = full volume) to
+balance the mix to your taste.
+
+  audio/startup.wav        -> plays once when the terminal boots
+  audio/keypress.wav       -> plays once per keystroke
+  audio/error.wav          -> general errors (unknown command,
+                              file not found, must-login)
+  audio/loginerror.wav     -> failed login (wrong user/pass)
+  audio/ambience.wav       -> looping background track
+  audio/loginsuccess.wav   -> successful login (any account:
+                              DIV9_GUEST, ADMIN, or BASILISK)
+  audio/success.wav        -> general success sound - plays on
+                              whoami, database, read (opening a
+                              file or listing a category),
+                              logout, and the secret credits
+                              command. Any future successful
+                              command uses this one too, unless
+                              you give it its own entry above.
 ===========================================================
 */
 
-const sounds = {
+const SOUND_FILES = {
 
-    startup: document.getElementById("startup"),
-
-    keypress: document.getElementById("keypress"),
-
-    success: document.getElementById("success"),
-
-    error: document.getElementById("error"),
-
-    loginerror: document.getElementById("loginerror"),
-
-    ambience: document.getElementById("ambience")
+    startup:        "audio/startup.wav",
+    keypress:       "audio/keypress.wav",
+    error:          "audio/error.wav",
+    loginerror:     "audio/loginerror.wav",
+    ambience:       "audio/ambience.wav",
+    loginsuccess:   "audio/loginsuccess.wav",
+    success:        "audio/success.wav"
 
 };
 
-sounds.startup.src    = "audio/startup.wav";
-sounds.keypress.src   = "audio/keypress.wav";
-sounds.success.src    = "audio/success.wav";
-sounds.error.src      = "audio/error.wav";
-sounds.loginerror.src = "audio/loginerror.wav";
-sounds.ambience.src   = "audio/ambience.wav";
+const SOUND_VOLUME = {
+
+    startup:        1,
+    keypress:       0.6,
+    error:          1,
+    loginerror:     1,
+    ambience:       0.25,
+    loginsuccess:   1,
+    success:        1
+
+};
+
+const sounds = {};
+
+Object.keys(SOUND_FILES).forEach(name=>{
+
+    let el = document.getElementById(name.replace(/_/g,"-"));
+
+    el.src = SOUND_FILES[name];
+
+    el.volume = SOUND_VOLUME[name] !== undefined ? SOUND_VOLUME[name] : 1;
+
+    sounds[name] = el;
+
+});
 
 
 // If a wav file is missing, misnamed, or in a format the
@@ -76,7 +103,7 @@ Object.keys(sounds).forEach(name=>{
         console.warn(
 
             `[audio] "${name}" failed to load - check that ` +
-            `audio/${name}.wav exists and is a valid wav file.`
+            `${SOUND_FILES[name]} exists and is a valid wav file.`
 
         );
 
@@ -122,17 +149,14 @@ BACKGROUND AMBIENCE
 
 A quiet looping track that starts on the user's first
 interaction with the page (browsers block audio from
-autoplaying before that). Adjust AMBIENCE_VOLUME below to
-taste - 0 is silent, 1 is full volume.
+autoplaying before that). Volume is set via SOUND_VOLUME
+above ("ambience" key).
 ===========================================================
 */
-
-const AMBIENCE_VOLUME = 0.25;
 
 let ambienceStarted = false;
 
 sounds.ambience.loop = true;
-sounds.ambience.volume = AMBIENCE_VOLUME;
 
 
 function startAmbience(){
@@ -172,13 +196,11 @@ const CREDITS_TEXT = [
 
     "",
 
-    "Lead Developer   :  ZETA-1 INK",
+    "Lead Developer   :  YOUR NAME HERE",
 
-    "Writing / Lore   :  SHEPHARD42",
+    "Writing / Lore   :  YOUR NAME HERE",
 
-    "Sound effects and Audio   :  NIMBLEBEAR, SKETCHY",
-
-    "Additional Thanks:  RONWHISKEY, SCOTT, NICKB",
+    "Additional Thanks:  YOUR NAME HERE",
 
     "",
 
@@ -568,6 +590,8 @@ async function execute(text){
 
         case "whoami":
 
+            playSound("success");
+
             printLine(
             currentUser
             );
@@ -676,7 +700,7 @@ function login(user,pass){
 
         setTimeout(()=>{
 
-            playSound("success");
+            playSound("loginsuccess");
 
             printLine(
             "ACCESS GRANTED",
@@ -712,7 +736,7 @@ function login(user,pass){
 
         applyTheme(currentUser);
 
-        playSound("success");
+        playSound("loginsuccess");
 
         printLine(
         "ADMIN BACKDOOR ACCEPTED",
@@ -746,7 +770,7 @@ function login(user,pass){
 
         applyTheme(currentUser);
 
-        playSound("success");
+        playSound("loginsuccess");
 
         printLine(
         "SIGNAL ACCEPTED",
@@ -793,6 +817,7 @@ function logout(){
 
     applyTheme(currentUser);
 
+    playSound("success");
 
     printLine(
     "SESSION TERMINATED",
@@ -827,6 +852,8 @@ function databaseCommand(){
     }
 
 
+
+    playSound("success");
 
     printLine(
     "DATABASE INDEX - CATEGORIES:",
@@ -924,6 +951,8 @@ async function readEntry(name){
         );
 
 
+        playSound("success");
+
         printLine(
         direct.content
         );
@@ -951,6 +980,8 @@ async function readEntry(name){
 
 
     if(matches.length > 0){
+
+        playSound("success");
 
         printLine(
         `CATEGORY: ${name.toUpperCase()}`,
