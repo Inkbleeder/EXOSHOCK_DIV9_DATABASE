@@ -172,13 +172,11 @@ const CREDITS_TEXT = [
 
     "",
 
-    "Lead Developer   :  ZETA-1 INK",
+    "Lead Developer   :  YOUR NAME HERE",
 
-    "Writing / Lore   :  SHEPHARD42, ZETA-1 INK, SKETCHY, NIMBLEBEAR"
+    "Writing / Lore   :  YOUR NAME HERE",
 
-    "Sound effects and Audio : NIMBLEBEAR, SKETCHY
-
-    "Additional Thanks:  EDUARDO, SCOTT, NICKB, EXOSHOCK",
+    "Additional Thanks:  YOUR NAME HERE",
 
     "",
 
