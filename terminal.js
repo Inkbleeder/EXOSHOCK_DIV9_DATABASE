@@ -24,6 +24,128 @@ const input = document.getElementById("command-input");
 const status = document.getElementById("connection-status");
 
 
+/*
+===========================================================
+AUDIO
+
+Drop your .wav files into an /audio folder next to
+index.html, using these three filenames (or change the
+paths below to match whatever you name them):
+
+  audio/keypress.wav
+  audio/success.wav
+  audio/error.wav
+===========================================================
+*/
+
+const sounds = {
+
+    keypress: document.getElementById("keypress"),
+
+    success: document.getElementById("success"),
+
+    error: document.getElementById("error")
+
+};
+
+sounds.keypress.src = "audio/keypress.wav";
+sounds.success.src  = "audio/success.wav";
+sounds.error.src    = "audio/error.wav";
+
+
+function playSound(name){
+
+    let sound = sounds[name];
+
+    if(!sound) return;
+
+    sound.currentTime = 0;
+
+    // play() returns a promise that rejects if the browser
+    // blocks autoplay (e.g. before the user has interacted
+    // with the page yet) - catch it so it fails silently
+    // instead of throwing console errors.
+    sound.play().catch(()=>{});
+
+}
+
+
+
+/*
+===========================================================
+SECRET CREDITS COMMAND
+
+Not listed in "help" - only discoverable if a database
+entry tells the player the command word. Change
+CREDITS_COMMAND to whatever word you plant in that entry,
+and edit the CREDITS_TEXT array with your contributors.
+===========================================================
+*/
+
+const CREDITS_COMMAND = "manifest";
+
+const CREDITS_TEXT = [
+
+    "// DIVISION-9 ARCHIVE - CONTRIBUTOR MANIFEST",
+
+    "",
+
+    "Lead Developer   :  YOUR NAME HERE",
+
+    "Writing / Lore   :  YOUR NAME HERE",
+
+    "Additional Thanks:  YOUR NAME HERE",
+
+    "",
+
+    "// end of file"
+
+];
+
+
+/*
+===========================================================
+ACCOUNT THEMES
+
+Applies a CSS class to <body> matching the account that's
+logged in, so style.css can give each account its own
+color scheme. See the "theme-*" classes in style.css.
+===========================================================
+*/
+
+function applyTheme(user){
+
+    document.body.classList.remove(
+
+        "theme-div9guest",
+
+        "theme-admin",
+
+        "theme-basilisk"
+
+    );
+
+    if(user === "DIV9_GUEST"){
+
+        document.body.classList.add("theme-div9guest");
+
+    }
+
+    else if(user === "ADMIN"){
+
+        document.body.classList.add("theme-admin");
+
+    }
+
+    else if(user === "BASILISK"){
+
+        document.body.classList.add("theme-basilisk");
+
+    }
+
+}
+
+
 
 /*
 ===========================================================
@@ -227,8 +349,13 @@ input.addEventListener(
 async function(event){
 
 
-    if(event.key !== "Enter")
+    if(event.key !== "Enter"){
+
+        playSound("keypress");
+
         return;
+
+    }
 
 
     let commandLine=this.value.trim();
@@ -386,8 +513,18 @@ async function execute(text){
 
 
 
+        case CREDITS_COMMAND:
+
+            showCredits();
+
+        break;
+
+
+
 
         default:
+
+            playSound("error");
 
             printLine(
             "UNKNOWN COMMAND",
@@ -440,6 +577,8 @@ function login(user,pass){
 
         status.innerText="SECURE";
 
+        applyTheme(currentUser);
+
         printLine(
         "Authenticating...",
         "system"
@@ -447,6 +586,8 @@ function login(user,pass){
 
 
         setTimeout(()=>{
+
+            playSound("success");
 
             printLine(
             "ACCESS GRANTED",
@@ -480,6 +621,9 @@ function login(user,pass){
 
         currentUser="ADMIN";
 
+        applyTheme(currentUser);
+
+        playSound("success");
 
         printLine(
         "ADMIN BACKDOOR ACCEPTED",
@@ -511,6 +655,9 @@ function login(user,pass){
 
         currentUser="BASILISK";
 
+        applyTheme(currentUser);
+
+        playSound("success");
 
         printLine(
         "SIGNAL ACCEPTED",
@@ -528,6 +675,8 @@ function login(user,pass){
     }
 
 
+
+    playSound("error");
 
     printLine(
     "ACCESS DENIED",
@@ -553,6 +702,8 @@ function logout(){
 
     status.innerText="ONLINE";
 
+    applyTheme(currentUser);
+
 
     printLine(
     "SESSION TERMINATED",
@@ -574,6 +725,8 @@ function databaseCommand(){
 
 
     if(!isLoggedIn){
+
+        playSound("error");
 
         printLine(
         "ERROR: LOGIN REQUIRED",
@@ -654,6 +807,8 @@ async function readEntry(name){
 
     if(!isLoggedIn){
 
+        playSound("error");
+
         printLine(
         "ERROR: LOGIN REQUIRED",
         "error"
@@ -726,6 +881,8 @@ async function readEntry(name){
     }
 
 
+    playSound("error");
+
     printLine(
     "ERROR 0xA143",
     "error"
@@ -737,6 +894,27 @@ async function readEntry(name){
     "error"
     );
 
+
+}
+
+
+
+/*
+===========================================================
+CREDITS (secret command)
+===========================================================
+*/
+
+
+async function showCredits(){
+
+    playSound("success");
+
+    for(const line of CREDITS_TEXT){
+
+        await printLine(line, "success");
+
+    }
 
 }
 
