@@ -232,6 +232,70 @@ body::before{
 }
 
 /* ===========================================================
+   Idle Banner
+
+   Full-screen ASCII logo that fades in after a period of
+   inactivity, but only while the terminal screen is empty
+   (see the "clear" command). Bounces around like an old DVD
+   screensaver. Sits above the terminal but below the CRT
+   scanline overlay, so the flicker effect still plays over it.
+   =========================================================== */
+
+#idle-banner{
+
+    position:fixed;
+    inset:0;
+
+    overflow:hidden;
+
+    z-index:500;
+
+    pointer-events:none;
+
+    opacity:0;
+
+    transition:opacity 1.2s ease;
+
+}
+
+#idle-banner.visible{
+
+    opacity:1;
+
+}
+
+#idle-banner-text{
+
+    position:absolute;
+
+    top:0;
+    left:0;
+
+    margin:0;
+
+    font-family:"Courier New", monospace;
+
+    font-size:clamp(8px, 1.6vw, 22px);
+
+    line-height:1.15;
+
+    white-space:pre;
+
+    letter-spacing:2px;
+
+    color:var(--green);
+
+    text-shadow:
+        0 0 20px var(--green),
+        0 0 45px var(--green);
+
+    animation:flicker .12s infinite;
+
+    will-change:transform;
+
+}
+
+/* ===========================================================
    Cursor
    =========================================================== */
 
