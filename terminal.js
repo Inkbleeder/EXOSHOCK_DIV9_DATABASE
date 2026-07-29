@@ -870,21 +870,54 @@ function databaseCommand(){
 
             categories[entry.category] = {
 
-                total: 0,
+                direct: { total: 0, locked: 0 },
 
-                locked: 0
+                subcategories: {}
 
             };
 
         }
 
 
-        categories[entry.category].total++;
+        let cat = categories[entry.category];
 
 
-        if(entry.locked){
+        if(entry.subcategory){
 
-            categories[entry.category].locked++;
+            if(!cat.subcategories[entry.subcategory]){
+
+                cat.subcategories[entry.subcategory] = {
+
+                    total: 0,
+
+                    locked: 0
+
+                };
+
+            }
+
+
+            cat.subcategories[entry.subcategory].total++;
+
+
+            if(entry.locked){
+
+                cat.subcategories[entry.subcategory].locked++;
+
+            }
+
+        }
+
+        else{
+
+            cat.direct.total++;
+
+
+            if(entry.locked){
+
+                cat.direct.locked++;
+
+            }
 
         }
 
@@ -893,22 +926,54 @@ function databaseCommand(){
 
     Object.keys(categories).forEach(cat=>{
 
+        let entry = categories[cat];
+
+
         printLine(
         `[${cat.toUpperCase()}]`
         );
 
-        printLine(
-        `${categories[cat].total} FILES`
-        );
 
-        if(categories[cat].locked > 0){
+        if(entry.direct.total > 0){
 
             printLine(
-            `${categories[cat].locked} HIDDEN / LOCKED`,
-            "warning"
+            `${entry.direct.total} FILES`
             );
 
+            if(entry.direct.locked > 0){
+
+                printLine(
+                `${entry.direct.locked} HIDDEN / LOCKED`,
+                "warning"
+                );
+
+            }
+
         }
+
+
+        Object.keys(entry.subcategories).forEach(sub=>{
+
+            let subEntry = entry.subcategories[sub];
+
+            printLine(
+            `    [${sub.toUpperCase()}]`
+            );
+
+            printLine(
+            `    ${subEntry.total} FILES`
+            );
+
+            if(subEntry.locked > 0){
+
+                printLine(
+                `    ${subEntry.locked} HIDDEN / LOCKED`,
+                "warning"
+                );
+
+            }
+
+        });
 
     });
 
@@ -989,6 +1054,46 @@ async function readEntry(name){
         );
 
         matches.forEach(entry=>{
+
+            printLine(
+            `[${entry.toUpperCase()}]`
+            );
+
+        });
+
+        return;
+
+    }
+
+
+
+    let subMatches = Object.keys(database).filter(entry=>
+
+        database[entry].subcategory
+        &&
+        database[entry].subcategory.toLowerCase()
+        ===
+        name.toLowerCase()
+        &&
+        (
+            !database[entry].locked
+            ||
+            hasClearance
+        )
+
+    );
+
+
+    if(subMatches.length > 0){
+
+        playSound("success");
+
+        printLine(
+        `SUBCATEGORY: ${name.toUpperCase()}`,
+        "success"
+        );
+
+        subMatches.forEach(entry=>{
 
             printLine(
             `[${entry.toUpperCase()}]`
