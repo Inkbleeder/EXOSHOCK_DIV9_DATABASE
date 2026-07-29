@@ -198,11 +198,13 @@ const CREDITS_TEXT = [
 
     "",
 
-    "Lead Developer   :  YOUR NAME HERE",
+    "Lead Developer   :  Ink",
 
-    "Writing / Lore   :  YOUR NAME HERE",
+    "Writing / Lore   :  Shephard42",
 
-    "Additional Thanks:  YOUR NAME HERE",
+    "Sound design     :  Sketchy, Nimblebear",
+
+    "Additional Thanks:  RonWhiskey, Scott, NickB",
 
     "",
 
