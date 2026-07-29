@@ -15,6 +15,7 @@ Handles:
 
 let isLoggedIn = false;
 let isAdmin = false;
+let hasClearance = false;
 let currentUser = "GUEST";
 
 
@@ -333,6 +334,15 @@ async function execute(text){
 
 
 
+        case "petrify":
+
+            petrifyEvent();
+
+        break;
+
+
+
+
         default:
 
             printLine(
@@ -422,6 +432,8 @@ function login(user,pass){
 
         isAdmin=true;
 
+        hasClearance=true;
+
         currentUser="ADMIN";
 
 
@@ -433,6 +445,36 @@ function login(user,pass){
 
         printLine(
         "ROOT ACCESS ENABLED",
+        "warning"
+        );
+
+
+        return;
+
+    }
+
+
+
+    if(
+        user === "basilisk"
+        &&
+        pass === "mirror"
+    ){
+
+        isLoggedIn=true;
+
+        hasClearance=true;
+
+        currentUser="BASILISK";
+
+
+        printLine(
+        "SIGNAL ACCEPTED",
+        "success"
+        );
+
+        printLine(
+        "CLEARANCE GRANTED",
         "warning"
         );
 
@@ -459,6 +501,8 @@ function logout(){
     isLoggedIn=false;
 
     isAdmin=false;
+
+    hasClearance=false;
 
     currentUser="GUEST";
 
@@ -504,20 +548,54 @@ function databaseCommand(){
     );
 
 
-    let categories = [...new Set(
-
-        Object.values(database).map(
-            entry => entry.category
-        )
-
-    )];
+    let categories = {};
 
 
-    categories.forEach(cat=>{
+    Object.values(database).forEach(entry=>{
+
+        if(!categories[entry.category]){
+
+            categories[entry.category] = {
+
+                total: 0,
+
+                locked: 0
+
+            };
+
+        }
+
+
+        categories[entry.category].total++;
+
+
+        if(entry.locked){
+
+            categories[entry.category].locked++;
+
+        }
+
+    });
+
+
+    Object.keys(categories).forEach(cat=>{
 
         printLine(
         `[${cat.toUpperCase()}]`
         );
+
+        printLine(
+        `${categories[cat].total} FILES`
+        );
+
+        if(categories[cat].locked > 0){
+
+            printLine(
+            `${categories[cat].locked} HIDDEN / LOCKED`,
+            "warning"
+            );
+
+        }
 
     });
 
@@ -543,47 +621,23 @@ async function readEntry(name){
 
 
 
-    if(!database[name]){
+    let direct = database[name];
 
 
-        let matches = Object.keys(database).filter(entry=>
+    if(direct && (!direct.locked || hasClearance)){
 
-            database[entry].category.toLowerCase()
-            ===
-            name.toLowerCase()
-
+        await loading(
+        "Opening archive"
         );
 
 
-        if(matches.length > 0){
-
-            printLine(
-            `CATEGORY: ${name.toUpperCase()}`,
-            "success"
-            );
-
-            matches.forEach(entry=>{
-
-                printLine(
-                `[${entry.toUpperCase()}]`
-                );
-
-            });
-
-            return;
-
-        }
-
-
-        printLine(
-        "ERROR 0xA143",
-        "error"
+        await loading(
+        "Decrypting file"
         );
 
 
         printLine(
-        "FILE NOT FOUND",
-        "error"
+        direct.content
         );
 
 
@@ -593,18 +647,178 @@ async function readEntry(name){
 
 
 
-    await loading(
-    "Opening archive"
+    let matches = Object.keys(database).filter(entry=>
+
+        database[entry].category.toLowerCase()
+        ===
+        name.toLowerCase()
+        &&
+        (
+            !database[entry].locked
+            ||
+            hasClearance
+        )
+
     );
 
 
-    await loading(
-    "Decrypting file"
+    if(matches.length > 0){
+
+        printLine(
+        `CATEGORY: ${name.toUpperCase()}`,
+        "success"
+        );
+
+        matches.forEach(entry=>{
+
+            printLine(
+            `[${entry.toUpperCase()}]`
+            );
+
+        });
+
+        return;
+
+    }
+
+
+    printLine(
+    "ERROR 0xA143",
+    "error"
     );
 
 
     printLine(
-    database[name].content
+    "FILE NOT FOUND",
+    "error"
+    );
+
+
+}
+
+
+
+async function petrifyEvent(){
+
+
+    if(!isLoggedIn){
+
+        printLine(
+        "UNKNOWN COMMAND",
+        "error"
+        );
+
+        return;
+
+    }
+
+
+    await printLine(
+    "//-UNKOWN_SIGNAL_DETECTED",
+    "system"
+    );
+
+    await sleep(500);
+
+
+    await printLine(
+    " //-SIGNAL_DECODED",
+    "system"
+    );
+
+    await sleep(500);
+
+
+    await printLine(
+    "  //-DISPLAY_DECODED_SIGNAL",
+    "system"
+    );
+
+    await sleep(500);
+
+
+    await printLine(
+    "//-Y/N",
+    "system"
+    );
+
+    await sleep(600);
+
+
+    await printLine(
+    ">\\Y",
+    "warning"
+    );
+
+    await sleep(800);
+
+
+    await printLine(
+    "//-[WE HAVE BEEN WATCHING YOU OPERATOR. YOU ARE AWFULLY INTERESTED IN DIVISION-9. HERE'S A GIFT. HAVE FUN DIGGING.]",
+    "error"
+    );
+
+    await sleep(800);
+
+
+    await printLine(
+    "//-ATTACHMENT_FOUND",
+    "system"
+    );
+
+    await sleep(500);
+
+
+    await printLine(
+    "   //-DISPLAY_ATTACHMENT",
+    "system"
+    );
+
+    await sleep(500);
+
+
+    await printLine(
+    "//-Y/N",
+    "system"
+    );
+
+    await sleep(600);
+
+
+    await printLine(
+    ">>\\Y",
+    "warning"
+    );
+
+    await sleep(800);
+
+
+    await printLine(
+    "//-[===REDACTED===]",
+    "error"
+    );
+
+    await sleep(500);
+
+
+    await printLine(
+    "//-\u2620\uFE0E\u2620\uFE0E",
+    "error"
+    );
+
+    await sleep(1000);
+
+
+    await printLine("");
+
+    await printLine(
+    "            // username: basilisk",
+    "success"
+    );
+
+    await printLine(
+    "              // password: mirror",
+    "success"
     );
 
 }
