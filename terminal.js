@@ -33,6 +33,8 @@ BOOT SEQUENCE
 
 window.onload = () => {
 
+    document.getElementById("terminal").style.visibility = "visible";
+
     input.disabled = true;
 
     bootSequence();
@@ -106,24 +108,66 @@ OUTPUT
 */
 
 
+/*
+===========================================================
+TYPEWRITER SETTINGS
+===========================================================
+*/
+
+const TYPE_SPEED = 12; // milliseconds per character
+
+let printQueue = [];
+let isPrinting = false;
+
+
 function printLine(text, type=""){
 
     return new Promise(resolve=>{
 
+        printQueue.push({ text, type, resolve });
+
+        if(!isPrinting){
+
+            processQueue();
+
+        }
+
+    });
+
+}
+
+
+async function processQueue(){
+
+    isPrinting = true;
+
+    while(printQueue.length > 0){
+
+        let item = printQueue.shift();
+
         let line = document.createElement("div");
 
-        line.className = type;
-
-        line.innerText = text;
+        line.className = item.type;
 
         feed.appendChild(line);
 
-        feed.scrollTop = feed.scrollHeight;
+
+        for(let i=0; i<=item.text.length; i++){
+
+            line.textContent = item.text.slice(0,i);
+
+            feed.scrollTop = feed.scrollHeight;
+
+            await sleep(TYPE_SPEED);
+
+        }
 
 
-        setTimeout(resolve,20);
+        item.resolve();
 
-    });
+    }
+
+    isPrinting = false;
 
 }
 
