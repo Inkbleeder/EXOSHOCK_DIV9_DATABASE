@@ -8,6 +8,28 @@ Contains all archived lore entries.
 
 Entry names must be lowercase.
 Terminal searches these keys.
+
+---------------------------------------------------------
+HOW TO ADD A NEW ENTRY:
+
+Copy this block, paste it inside the database object,
+and fill it in. A brand new category name (anything you
+type) automatically becomes a real, searchable category -
+there is no separate list to update.
+
+"your entry key": {
+
+    category: "Category Name",
+
+    locked: false,
+
+    content:
+    `
+    Your text here.
+    `
+
+},
+---------------------------------------------------------
 ===========================================================
 */
 
@@ -24,6 +46,8 @@ ZETA-1 VEIL
 "zeta-1 veil": {
 
 category: "Factions",
+
+locked: false,
 
 content:
 `
@@ -130,6 +154,8 @@ DEATHSEEKERS
 
 category: "Factions",
 
+locked: false,
+
 content:
 `
 FILE ID: DEATHSEEKERS
@@ -208,6 +234,8 @@ PROJECT COVET
 "project covet": {
 
 category: "Projects",
+
+locked: false,
 
 content:
 `
