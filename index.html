@@ -26,6 +26,9 @@
     <!-- CRT Overlay -->
     <div id="crt-overlay"></div>
 
+    <!-- Idle Banner (appears after ~5min idle with a cleared screen) -->
+    <div id="idle-banner"><pre id="idle-banner-text"></pre></div>
+
     <!-- Terminal -->
     <main id="terminal">
 
@@ -68,6 +71,7 @@
     <audio id="ambience" preload="auto"></audio>
     <audio id="loginsuccess" preload="auto"></audio>
     <audio id="success" preload="auto"></audio>
+    <audio id="idle" preload="auto"></audio>
 
     <!-- Scripts -->
     <script src="database.js"></script>
