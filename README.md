@@ -1,29 +1,30 @@
 Put your .wav files in this folder with these exact names:
 
-  startup.wav    -> plays once when the terminal boots up
-  keypress.wav   -> plays once per keystroke while typing
-  success.wav    -> plays on successful login / credits command
-  error.wav      -> plays on general errors (unknown command,
-                    file not found, "login required")
-  loginerror.wav -> plays specifically when a login attempt
-                    fails (wrong username/password)
-  ambience.wav   -> quiet looping background track, starts on
-                    the user's first click or keypress
+  startup.wav      -> plays once when the terminal boots up
+  keypress.wav     -> plays once per keystroke while typing
+  error.wav        -> general errors (unknown command, file
+                      not found, "login required")
+  loginerror.wav   -> failed login attempt (wrong user/pass)
+  ambience.wav     -> quiet looping background track, starts
+                      on the user's first click or keypress
+  loginsuccess.wav -> plays on ANY successful login (whether
+                      it's div9, admin, or basilisk)
+  success.wav      -> plays whenever any other command
+                      completes successfully: whoami, database,
+                      read (whether it opens a file or lists a
+                      category), logout, and the secret credits
+                      command. Any future successful command
+                      you add will use this one too, unless you
+                      give it its own dedicated sound + entry.
 
-terminal.js points at these paths already:
-  audio/startup.wav
-  audio/keypress.wav
-  audio/success.wav
-  audio/error.wav
-  audio/loginerror.wav
-  audio/ambience.wav
+terminal.js points at these paths already (see the
+SOUND_FILES object near the top of the file). If you want
+different filenames, edit that object to match.
 
-If you want different filenames, edit the sounds.*.src lines
-near the top of terminal.js to match.
-
-ADJUSTING AMBIENCE VOLUME: near the top of terminal.js there's
-a line "const AMBIENCE_VOLUME = 0.25;" - change that number
-(0 = silent, 1 = full volume) to taste.
+ADJUSTING VOLUME PER SOUND: near the top of terminal.js
+there's a SOUND_VOLUME object listing every sound with a
+number from 0 (silent) to 1 (full volume) - edit any of
+those numbers to balance the mix to your taste.
 
 TROUBLESHOOTING A SOUND THAT DOESN'T PLAY:
 Open the browser dev console (F12 -> Console tab) and reload
