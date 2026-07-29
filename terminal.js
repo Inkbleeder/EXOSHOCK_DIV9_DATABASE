@@ -29,28 +29,38 @@ const status = document.getElementById("connection-status");
 AUDIO
 
 Drop your .wav files into an /audio folder next to
-index.html, using these three filenames (or change the
-paths below to match whatever you name them):
+index.html, using these filenames (or change the paths
+below to match whatever you name them):
 
-  audio/keypress.wav
-  audio/success.wav
-  audio/error.wav
+  audio/startup.wav    -> plays once when the terminal boots
+  audio/keypress.wav   -> plays once per keystroke
+  audio/success.wav    -> plays on successful login / credits
+  audio/error.wav      -> plays on general errors (unknown
+                          command, file not found, must-login)
+  audio/loginerror.wav -> plays specifically on failed login
+                          (wrong username/password)
 ===========================================================
 */
 
 const sounds = {
 
+    startup: document.getElementById("startup"),
+
     keypress: document.getElementById("keypress"),
 
     success: document.getElementById("success"),
 
-    error: document.getElementById("error")
+    error: document.getElementById("error"),
+
+    loginerror: document.getElementById("loginerror")
 
 };
 
-sounds.keypress.src = "audio/keypress.wav";
-sounds.success.src  = "audio/success.wav";
-sounds.error.src    = "audio/error.wav";
+sounds.startup.src    = "audio/startup.wav";
+sounds.keypress.src   = "audio/keypress.wav";
+sounds.success.src    = "audio/success.wav";
+sounds.error.src      = "audio/error.wav";
+sounds.loginerror.src = "audio/loginerror.wav";
 
 
 function playSound(name){
@@ -166,6 +176,8 @@ window.onload = () => {
 
 
 async function bootSequence(){
+
+    playSound("startup");
 
     await printLine("BSLSK DIVISION-9 DATABASE", "boot");
     await printLine("--------------------------------", "system");
@@ -676,7 +688,7 @@ function login(user,pass){
 
 
 
-    playSound("error");
+    playSound("loginerror");
 
     printLine(
     "ACCESS DENIED",
