@@ -407,6 +407,14 @@ body.theme-div9guest{
 
 }
 
+body.theme-div9admin{
+
+    --green:#ffd23f;
+    --green-dim:#e0af1a;
+    --border:rgba(255,210,63,.35);
+
+}
+
 body.theme-admin{
 
     --green:#ff5c3d;
