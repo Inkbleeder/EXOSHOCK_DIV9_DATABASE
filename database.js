@@ -25,7 +25,7 @@ name for it automatically creates that subcategory too.
 
     subcategory: "Optional Subcategory Name",
 
-    locked: false,
+    clearance: 0,
 
     content:
     `
@@ -37,6 +37,16 @@ name for it automatically creates that subcategory too.
 Leave out the "subcategory" line entirely if an entry
 doesn't need one - it'll just show up directly under its
 main category like before, no different than today.
+
+CLEARANCE LEVELS - how locked an entry is:
+
+    0 = anyone logged in can read it (default - this is
+        what every entry above uses)
+    1 = requires the div9_admin account or higher
+    2 = requires the basilisk account or higher
+    3 = the true admin account only (admin bypasses every
+        level automatically, so 3 is really just "nobody
+        else will ever see this")
 
 Typing 'database' in the terminal will then show:
 
@@ -67,7 +77,7 @@ ZETA-1 VEIL
 
 category: "Factions",
 
-locked: false,
+clearance: 0,
 
 content:
 `
@@ -174,7 +184,7 @@ DEATHSEEKERS
 
 category: "Factions",
 
-locked: false,
+clearance: 0,
 
 content:
 `
@@ -255,7 +265,7 @@ PROJECT COVET
 
 category: "Projects",
 
-locked: false,
+clearance: 0,
 
 content:
 `
