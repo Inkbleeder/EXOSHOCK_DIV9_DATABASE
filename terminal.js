@@ -198,12 +198,19 @@ ADMIN-ONLY COMMANDS
 
 Every command name listed here automatically shows up in
 the 'help' output, but only when isAdmin is true. Add a
-new admin-only command by: 1) adding its name here, and
-2) adding its case + function like forceidle below.
+new admin-only OR hidden/puzzle command by: 1) adding its
+name here, and 2) adding its case + function like forceidle
+below.
+
+Note: this list includes puzzle/ARG commands like "petrify"
+and "debug" too. They're still fully hidden from every other
+account's help and still gated exactly as before - listing
+them here only helps *you* (the real admin) find and test
+every command that exists, in one place.
 ===========================================================
 */
 
-const ADMIN_ONLY_COMMANDS = [ "forceidle" ];
+const ADMIN_ONLY_COMMANDS = [ "forceidle", "petrify", "debug" ];
 
 const CREDITS_TEXT = [
 
