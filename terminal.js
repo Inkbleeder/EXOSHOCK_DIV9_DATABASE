@@ -15,7 +15,7 @@ Handles:
 
 let isLoggedIn = false;
 let isAdmin = false;
-let hasClearance = false;
+let clearanceLevel = 0;
 let currentUser = "GUEST";
 
 
@@ -192,6 +192,19 @@ and edit the CREDITS_TEXT array with your contributors.
 
 const CREDITS_COMMAND = "manifest";
 
+/*
+===========================================================
+ADMIN-ONLY COMMANDS
+
+Every command name listed here automatically shows up in
+the 'help' output, but only when isAdmin is true. Add a
+new admin-only command by: 1) adding its name here, and
+2) adding its case + function like forceidle below.
+===========================================================
+*/
+
+const ADMIN_ONLY_COMMANDS = [ "forceidle" ];
+
 const CREDITS_TEXT = [
 
     "// DIVISION-9 ARCHIVE - CONTRIBUTOR MANIFEST",
@@ -229,6 +242,8 @@ function applyTheme(user){
 
         "theme-div9guest",
 
+        "theme-div9admin",
+
         "theme-admin",
 
         "theme-basilisk"
@@ -238,6 +253,12 @@ function applyTheme(user){
     if(user === "DIV9_GUEST"){
 
         document.body.classList.add("theme-div9guest");
+
+    }
+
+    else if(user === "DIV9_ADMIN"){
+
+        document.body.classList.add("theme-div9admin");
 
     }
 
@@ -745,10 +766,14 @@ async function execute(text){
 
                 if(isAdmin){
 
-                    printLine(
-                    "forceidle",
-                    "warning"
-                    );
+                    ADMIN_ONLY_COMMANDS.forEach(cmd=>{
+
+                        printLine(
+                        cmd,
+                        "warning"
+                        );
+
+                    });
 
                 }
 
@@ -879,6 +904,8 @@ function login(user,pass){
 
         isLoggedIn=true;
 
+        clearanceLevel=0;
+
         currentUser="DIV9_GUEST";
 
 
@@ -905,7 +932,43 @@ function login(user,pass){
             "Welcome DIV9_GUEST."
             );
 
+            printLine(
+            "Type 'help' for a list of commands."
+            );
+
         },700);
+
+
+        return;
+
+    }
+
+
+
+    if(
+        user === "div9_admin"
+        &&
+        pass === "helios"
+    ){
+
+        isLoggedIn=true;
+
+        clearanceLevel=1;
+
+        currentUser="DIV9_ADMIN";
+
+        applyTheme(currentUser);
+
+        playSound("loginsuccess");
+
+        printLine(
+        "ACCESS GRANTED",
+        "success"
+        );
+
+        printLine(
+        "Welcome DIV9_ADMIN."
+        );
 
 
         return;
@@ -924,7 +987,7 @@ function login(user,pass){
 
         isAdmin=true;
 
-        hasClearance=true;
+        clearanceLevel=3;
 
         currentUser="ADMIN";
 
@@ -958,7 +1021,7 @@ function login(user,pass){
 
         isLoggedIn=true;
 
-        hasClearance=true;
+        clearanceLevel=2;
 
         currentUser="BASILISK";
 
@@ -1002,7 +1065,7 @@ function logout(){
 
     isAdmin=false;
 
-    hasClearance=false;
+    clearanceLevel=0;
 
     currentUser="GUEST";
 
@@ -1094,7 +1157,7 @@ function databaseCommand(){
             cat.subcategories[entry.subcategory].total++;
 
 
-            if(entry.locked){
+            if(entry.clearance > 0){
 
                 cat.subcategories[entry.subcategory].locked++;
 
@@ -1107,7 +1170,7 @@ function databaseCommand(){
             cat.direct.total++;
 
 
-            if(entry.locked){
+            if(entry.clearance > 0){
 
                 cat.direct.locked++;
 
@@ -1177,6 +1240,25 @@ function databaseCommand(){
 
 
 
+/*
+===========================================================
+CLEARANCE CHECK
+
+An entry is visible if the logged-in account's clearanceLevel
+meets or exceeds the entry's required clearance (0 by default
+- visible to anyone logged in). isAdmin always bypasses this
+entirely, regardless of clearanceLevel.
+===========================================================
+*/
+
+function hasAccessTo(entry){
+
+    return isAdmin || clearanceLevel >= (entry.clearance || 0);
+
+}
+
+
+
 async function readEntry(name){
 
 
@@ -1198,7 +1280,7 @@ async function readEntry(name){
     let direct = database[name];
 
 
-    if(direct && (!direct.locked || hasClearance)){
+    if(direct && hasAccessTo(direct)){
 
         await loading(
         "Opening archive"
@@ -1229,11 +1311,7 @@ async function readEntry(name){
         ===
         name.toLowerCase()
         &&
-        (
-            !database[entry].locked
-            ||
-            hasClearance
-        )
+        hasAccessTo(database[entry])
 
     );
 
@@ -1269,11 +1347,7 @@ async function readEntry(name){
         ===
         name.toLowerCase()
         &&
-        (
-            !database[entry].locked
-            ||
-            hasClearance
-        )
+        hasAccessTo(database[entry])
 
     );
 
