@@ -210,7 +210,7 @@ every command that exists, in one place.
 ===========================================================
 */
 
-const ADMIN_ONLY_COMMANDS = [ "forceidle", "petrify", "debug" ];
+const ADMIN_ONLY_COMMANDS = [ "forceidle", "petrify", "debug", "finality" ];
 
 const CREDITS_TEXT = [
 
@@ -847,6 +847,14 @@ async function execute(text){
         case "debug":
 
             debugEvent();
+
+        break;
+
+
+
+        case "finality":
+
+            finalityEvent();
 
         break;
 
@@ -1706,6 +1714,95 @@ async function debugEvent(){
     "         // password: helios",
     "success"
     );
+
+}
+
+
+
+/*
+===========================================================
+FINALITY
+
+Hidden command gated to clearanceLevel >= 2 (basilisk and
+above - admin bypasses via isAdmin regardless of level).
+Guest and div9_admin get plain UNKNOWN COMMAND, same as
+petrify/debug's hidden treatment. Plays a short decrypt
+sequence, then redirects to the sister site.
+===========================================================
+*/
+
+async function finalityEvent(){
+
+
+    if(!isAdmin && clearanceLevel < 2){
+
+        printLine(
+        "UNKNOWN COMMAND",
+        "error"
+        );
+
+        return;
+
+    }
+
+
+    await printLine(
+    "//-INITIATING FINAL SEQUENCE",
+    "system"
+    );
+
+    await sleep(500);
+
+
+    await printLine(
+    "//-VERIFYING CLEARANCE...",
+    "system"
+    );
+
+    await sleep(600);
+
+
+    await printLine(
+    "//-CLEARANCE CONFIRMED",
+    "success"
+    );
+
+    await sleep(600);
+
+
+    await printLine(
+    "//-UNSEALING EXTERNAL ARCHIVE LINK",
+    "system"
+    );
+
+    await sleep(700);
+
+
+    await printLine(
+    "//-DECRYPTING DESTINATION...",
+    "warning"
+    );
+
+    await sleep(900);
+
+
+    await printLine(
+    "//-[REDIRECT AUTHORIZED]",
+    "error"
+    );
+
+    await sleep(900);
+
+
+    await printLine(
+    "Redirecting...",
+    "success"
+    );
+
+    await sleep(1200);
+
+
+    window.location.href = "https://inkbleeder.github.io/EXOSHOCK_DIVISION-9_EVIDENCE_DIRECTORY/";
 
 }
 
