@@ -837,6 +837,14 @@ async function execute(text){
 
 
 
+        case "debug":
+
+            debugEvent();
+
+        break;
+
+
+
         case "forceidle":
 
             forceIdleCommand();
@@ -1533,6 +1541,162 @@ async function petrifyEvent(){
 
     await printLine(
     "              // password: mirror",
+    "success"
+    );
+
+}
+
+
+
+/*
+===========================================================
+DEBUG EVENT
+
+Hidden command - deliberately left out of 'help', but not
+gated behind login the way the ADMIN_ONLY_COMMANDS are.
+Any logged-in account (including plain guest) can trigger
+it if they know to type it. Plays out as a faux debug/crash
+log ending in a "maintenance note" and the decrypted
+div9_admin credentials.
+===========================================================
+*/
+
+async function debugEvent(){
+
+
+    if(!isLoggedIn){
+
+        printLine(
+        "UNKNOWN COMMAND",
+        "error"
+        );
+
+        return;
+
+    }
+
+
+    await printLine(
+    "[DEBUG] init_trace() -> ok",
+    "system"
+    );
+
+    await sleep(400);
+
+
+    await printLine(
+    "[DEBUG] verifying session token...",
+    "system"
+    );
+
+    await sleep(500);
+
+
+    await printLine(
+    "[DEBUG] token verification FAILED (0x22)",
+    "error"
+    );
+
+    await sleep(600);
+
+
+    await printLine(
+    "[DEBUG] falling back to legacy auth table...",
+    "system"
+    );
+
+    await sleep(700);
+
+
+    await printLine(
+    "--------------------------------------------------",
+    "system"
+    );
+
+    await sleep(400);
+
+
+    await printLine(
+    "// NOTE (maintenance):",
+    "warning"
+    );
+
+    await sleep(500);
+
+
+    await printLine(
+    "// found the old admin account in the code.",
+    "warning"
+    );
+
+    await sleep(500);
+
+
+    await printLine(
+    "// i managed to hide it from plain view but",
+    "warning"
+    );
+
+    await sleep(500);
+
+
+    await printLine(
+    "// it's still a viable backdoor.",
+    "warning"
+    );
+
+    await sleep(700);
+
+
+    await printLine(
+    "--------------------------------------------------",
+    "system"
+    );
+
+    await sleep(600);
+
+
+    await printLine(
+    "[DEBUG] legacy_table.entries -> 1 record found",
+    "system"
+    );
+
+    await sleep(500);
+
+
+    await printLine(
+    "[DEBUG] decrypting legacy credentials...",
+    "system"
+    );
+
+    await sleep(500);
+
+
+    await printLine(
+    "[DEBUG] cipher AES_256 -> key mismatch, retrying",
+    "error"
+    );
+
+    await sleep(600);
+
+
+    await printLine(
+    "[DEBUG] fallback cipher accepted -> OK",
+    "success"
+    );
+
+    await sleep(800);
+
+
+    await printLine("");
+
+    await printLine(
+    "         // username: div9_admin",
+    "success"
+    );
+
+    await printLine(
+    "         // password: helios",
     "success"
     );
 
