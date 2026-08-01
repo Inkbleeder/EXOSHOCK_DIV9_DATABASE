@@ -647,28 +647,47 @@ function autoComplete(el){
     let query = parts.slice(1).join(" ").toLowerCase();
 
 
-    let names = new Set();
-
-    Object.keys(database).forEach(key=>names.add(key));
+    // Categories & subcategories - case-insensitive either way,
+    // so lowercase works fine for both matching and inserting.
+    let categoryNames = new Set();
 
     Object.values(database).forEach(entry=>{
 
-        names.add(entry.category.toLowerCase());
+        categoryNames.add(entry.category.toLowerCase());
 
         if(entry.subcategory){
 
-            names.add(entry.subcategory.toLowerCase());
+            categoryNames.add(entry.subcategory.toLowerCase());
 
         }
 
     });
 
 
-    let candidates = [...names]
+    // Titles - matched case-insensitively for convenience, but the
+    // ACTUAL casing gets inserted, since a direct title lookup is
+    // case-sensitive (keys are no longer offered here at all - not
+    // meant to be typed by hand anymore).
+    let titleNames = new Set();
 
-        .filter(name => name.startsWith(query))
+    Object.values(database).forEach(entry=>{
 
-        .sort();
+        if(entry.title){
+
+            titleNames.add(entry.title);
+
+        }
+
+    });
+
+
+    let candidates = [
+
+        ...[...categoryNames].filter(name => name.startsWith(query)),
+
+        ...[...titleNames].filter(title => title.toLowerCase().startsWith(query))
+
+    ].sort((a,b) => a.toLowerCase().localeCompare(b.toLowerCase()));
 
 
     if(candidates.length === 0) return;
@@ -1300,27 +1319,18 @@ async function readEntry(name){
 
 
 
-    let direct = database[name];
+    // 1. Direct key match - case-insensitive. Keys are internal
+    // IDs now, not what's displayed, so exact case no longer
+    // matters here the way it used to.
+    let matchedKey = Object.keys(database).find(k=>
 
+        k.toLowerCase() === name.toLowerCase()
 
-    if(direct && hasAccessTo(direct)){
+    );
 
-        await loading(
-        "Opening archive"
-        );
+    if(matchedKey && hasAccessTo(database[matchedKey])){
 
-
-        await loading(
-        "Decrypting file"
-        );
-
-
-        playSound("success");
-
-        printLine(
-        direct.content
-        );
-
+        await openEntry(database[matchedKey]);
 
         return;
 
@@ -1328,6 +1338,104 @@ async function readEntry(name){
 
 
 
+    // 2. Title match(es) - case-sensitive, same "precision" rule
+    // the site has always used for direct lookups.
+    let titleKeys = Object.keys(database).filter(k=>
+
+        database[k].title === name
+        &&
+        hasAccessTo(database[k])
+
+    );
+
+    if(titleKeys.length === 1){
+
+        await openEntry(database[titleKeys[0]]);
+
+        return;
+
+    }
+
+    if(titleKeys.length > 1){
+
+        playSound("success");
+
+        printLine(
+        `MULTIPLE ENTRIES FOUND: "${name}"`,
+        "warning"
+        );
+
+        let locations = new Set();
+
+        titleKeys.forEach(k=>{
+
+            let e = database[k];
+
+            locations.add(
+
+                e.subcategory
+                ? `${e.category} / ${e.subcategory}`
+                : e.category
+
+            );
+
+        });
+
+        locations.forEach(loc=>{
+
+            printLine(`[${loc.toUpperCase()}]`);
+
+        });
+
+        printLine(
+        `Type 'read <category> ${name}' to specify.`
+        );
+
+        return;
+
+    }
+
+
+
+    // 3. "<category or subcategory> <title>" compound - resolves
+    // the ambiguity from step 2 by qualifying which one you mean.
+    let spaceIndex = name.indexOf(" ");
+
+    if(spaceIndex > -1){
+
+        let qualifier = name.slice(0, spaceIndex);
+
+        let rest = name.slice(spaceIndex + 1);
+
+        let qualifiedKey = Object.keys(database).find(k=>{
+
+            let e = database[k];
+
+            let inCategory =
+                e.category.toLowerCase() === qualifier.toLowerCase();
+
+            let inSubcategory =
+                e.subcategory
+                &&
+                e.subcategory.toLowerCase() === qualifier.toLowerCase();
+
+            return (inCategory || inSubcategory) && e.title === rest;
+
+        });
+
+        if(qualifiedKey && hasAccessTo(database[qualifiedKey])){
+
+            await openEntry(database[qualifiedKey]);
+
+            return;
+
+        }
+
+    }
+
+
+
+    // 4. Category listing (by title, not key)
     let matches = Object.keys(database).filter(entry=>
 
         database[entry].category.toLowerCase()
@@ -1351,7 +1459,7 @@ async function readEntry(name){
         matches.forEach(entry=>{
 
             printLine(
-            `[${entry.toUpperCase()}]`
+            `[${database[entry].title.toUpperCase()}]`
             );
 
         });
@@ -1362,6 +1470,7 @@ async function readEntry(name){
 
 
 
+    // 5. Subcategory listing (by title, not key)
     let subMatches = Object.keys(database).filter(entry=>
 
         database[entry].subcategory
@@ -1387,7 +1496,7 @@ async function readEntry(name){
         subMatches.forEach(entry=>{
 
             printLine(
-            `[${entry.toUpperCase()}]`
+            `[${database[entry].title.toUpperCase()}]`
             );
 
         });
@@ -1410,6 +1519,28 @@ async function readEntry(name){
     "error"
     );
 
+
+}
+
+
+
+async function openEntry(entry){
+
+    await loading(
+    "Opening archive"
+    );
+
+
+    await loading(
+    "Decrypting file"
+    );
+
+
+    playSound("success");
+
+    printLine(
+    entry.content
+    );
 
 }
 
