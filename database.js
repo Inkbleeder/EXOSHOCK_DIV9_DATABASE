@@ -6,8 +6,14 @@ database.js
 
 Contains all archived lore entries.
 
-Entry names must be lowercase.
-Terminal searches these keys.
+Every entry needs a unique KEY (the quoted text right before
+the { - can be anything, any case, doesn't need to be
+lowercase anymore) and a TITLE (what actually displays and
+what people type into 'read'). The key just needs to exist
+and be unique - think of it as an internal filing number
+nobody ever has to type. The title is what matters day to
+day, and titles CAN repeat across different entries (see
+DUPLICATE TITLES below).
 
 ---------------------------------------------------------
 HOW TO ADD A NEW ENTRY:
@@ -19,7 +25,9 @@ there is no separate list to update. The same goes for
 subcategory - it's entirely optional, and typing any new
 name for it automatically creates that subcategory too.
 
-"your entry key": {
+"a-unique-internal-key": {
+
+    title: "What Actually Displays",
 
     category: "Category Name",
 
@@ -37,6 +45,21 @@ name for it automatically creates that subcategory too.
 Leave out the "subcategory" line entirely if an entry
 doesn't need one - it'll just show up directly under its
 main category like before, no different than today.
+
+DUPLICATE TITLES:
+
+Two entries CAN share the same title (e.g. two different
+entries both titled "Other"), as long as they're in
+different categories or subcategories. If someone types
+'read Other' and it's ambiguous, the terminal lists which
+categories have a match and tells them to be specific:
+
+    'read <category name> <title>'
+
+    e.g. 'read Factions Other' vs 'read Projects Other'
+
+If two entries share BOTH a title AND a category/subcategory,
+there's no way to tell them apart anymore - avoid that.
 
 CLEARANCE LEVELS - how locked an entry is:
 
@@ -56,9 +79,11 @@ Typing 'database' in the terminal will then show:
     N HIDDEN / LOCKED
 
 Typing 'read <category name>' lists every entry in that
-category (regardless of subcategory).
+category (regardless of subcategory) BY TITLE.
 Typing 'read <subcategory name>' lists only the entries in
-that specific subcategory.
+that specific subcategory, also by title.
+Typing 'read <title>' opens that entry directly if the title
+is unique - see DUPLICATE TITLES above if it isn't.
 ---------------------------------------------------------
 ===========================================================
 */
@@ -74,6 +99,8 @@ ZETA-1 VEIL
 */
 
 "zeta-1 veil": {
+
+title: "Zeta-1 Veil",
 
 category: "Factions",
 
@@ -182,6 +209,8 @@ DEATHSEEKERS
 
 "deathseekers": {
 
+title: "Deathseekers",
+
 category: "Factions",
 
 clearance: 0,
@@ -262,6 +291,8 @@ PROJECT COVET
 
 
 "project covet": {
+
+title: "Project Covet",
 
 category: "Projects",
 
