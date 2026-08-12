@@ -77,6 +77,68 @@ body::before{
 }
 
 /* ===========================================================
+   Scanline Sweep
+
+   A soft band of green light that continuously sweeps down
+   the screen, like an old CRT monitor's refresh scan. Sits
+   above the terminal but below the flicker overlay. Kept
+   very low-opacity and additive so text underneath always
+   stays readable.
+   =========================================================== */
+
+#scanline-overlay{
+
+    position:fixed;
+
+    inset:0;
+
+    overflow:hidden;
+
+    pointer-events:none;
+
+    z-index:998;
+
+    mix-blend-mode:screen;
+
+}
+
+#scanline-overlay::before{
+
+    content:"";
+
+    position:absolute;
+
+    left:0;
+    right:0;
+
+    height:140px;
+
+    background:linear-gradient(
+        180deg,
+        rgba(0,255,100,0)     0%,
+        rgba(0,255,100,.05)  35%,
+        rgba(0,255,100,.16)  50%,
+        rgba(0,255,100,.05)  65%,
+        rgba(0,255,100,0)   100%
+    );
+
+    animation:scan-sweep 6s linear infinite;
+
+}
+
+@keyframes scan-sweep{
+
+    0%{
+        transform:translateY(-140px);
+    }
+
+    100%{
+        transform:translateY(100vh);
+    }
+
+}
+
+/* ===========================================================
    Terminal
    =========================================================== */
 
