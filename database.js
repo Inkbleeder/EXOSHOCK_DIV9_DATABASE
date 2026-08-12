@@ -104,7 +104,7 @@ title: "Zeta-1 Veil",
 
 category: "Factions",
 
-clearance: 0,
+clearance: 1,
 
 content:
 `
@@ -213,7 +213,7 @@ title: "Deathseekers",
 
 category: "Factions",
 
-clearance: 0,
+clearance: 1,
 
 content:
 `
@@ -296,7 +296,7 @@ title: "Project Covet",
 
 category: "Projects",
 
-clearance: 0,
+clearance: 1,
 
 content:
 `
