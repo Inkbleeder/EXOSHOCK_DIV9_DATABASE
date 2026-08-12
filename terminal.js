@@ -159,6 +159,7 @@ above ("ambience" key).
 let ambienceStarted = false;
 
 sounds.ambience.loop = true;
+sounds.idle.loop = true;
 
 
 function startAmbience(){
@@ -415,17 +416,33 @@ async function processQueue(){
         feed.appendChild(line);
 
 
+        // The actual text lives in its own text node so the
+        // block cursor (a separate element) can sit right
+        // after it without being wiped out every time the
+        // text node is updated.
+        let textNode = document.createTextNode("");
+
+        line.appendChild(textNode);
+
+
+        let blockCursor = document.createElement("span");
+
+        blockCursor.className = "cursor";
+
+        line.appendChild(blockCursor);
+
+
         for(let i=0; i<=item.text.length; i++){
 
             if(fastForward){
 
-                line.textContent = item.text;
+                textNode.textContent = item.text;
 
                 break;
 
             }
 
-            line.textContent = item.text.slice(0,i);
+            textNode.textContent = item.text.slice(0,i);
 
             feed.scrollTop = feed.scrollHeight;
 
@@ -434,6 +451,11 @@ async function processQueue(){
         }
 
         feed.scrollTop = feed.scrollHeight;
+
+
+        // Line is finished printing - drop the block cursor,
+        // it only marks the line currently being written.
+        line.removeChild(blockCursor);
 
 
         item.resolve();
@@ -2157,6 +2179,12 @@ function hideIdleBanner(){
         idleBounceFrame = null;
 
     }
+
+    // Stop the looping idle track and reset it so it starts
+    // from the beginning the next time the banner appears.
+    sounds.idle.pause();
+
+    sounds.idle.currentTime = 0;
 
 }
 
