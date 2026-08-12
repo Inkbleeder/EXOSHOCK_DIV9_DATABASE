@@ -1182,6 +1182,10 @@ function databaseCommand(){
     );
 
 
+    // Group entries by category / subcategory, splitting each
+    // group into what THIS logged-in account can actually open
+    // (shown by title) vs what it can't (shown only as a
+    // hidden/locked count - title withheld).
     let categories = {};
 
 
@@ -1191,7 +1195,7 @@ function databaseCommand(){
 
             categories[entry.category] = {
 
-                direct: { total: 0, locked: 0 },
+                direct: { titles: [], locked: 0 },
 
                 subcategories: {}
 
@@ -1202,6 +1206,8 @@ function databaseCommand(){
 
         let cat = categories[entry.category];
 
+        let visible = hasAccessTo(entry);
+
 
         if(entry.subcategory){
 
@@ -1209,7 +1215,7 @@ function databaseCommand(){
 
                 cat.subcategories[entry.subcategory] = {
 
-                    total: 0,
+                    titles: [],
 
                     locked: 0
 
@@ -1218,10 +1224,13 @@ function databaseCommand(){
             }
 
 
-            cat.subcategories[entry.subcategory].total++;
+            if(visible){
 
+                cat.subcategories[entry.subcategory].titles.push(entry.title);
 
-            if(entry.clearance > 0){
+            }
+
+            else{
 
                 cat.subcategories[entry.subcategory].locked++;
 
@@ -1231,10 +1240,13 @@ function databaseCommand(){
 
         else{
 
-            cat.direct.total++;
+            if(visible){
 
+                cat.direct.titles.push(entry.title);
 
-            if(entry.clearance > 0){
+            }
+
+            else{
 
                 cat.direct.locked++;
 
@@ -1255,20 +1267,20 @@ function databaseCommand(){
         );
 
 
-        if(entry.direct.total > 0){
+        entry.direct.titles.forEach(title=>{
 
             printLine(
-            `${entry.direct.total} FILES`
+            `    ${title}`
             );
 
-            if(entry.direct.locked > 0){
+        });
 
-                printLine(
-                `${entry.direct.locked} HIDDEN / LOCKED`,
-                "warning"
-                );
+        if(entry.direct.locked > 0){
 
-            }
+            printLine(
+            `    ${entry.direct.locked} HIDDEN / LOCKED`,
+            "warning"
+            );
 
         }
 
@@ -1281,14 +1293,18 @@ function databaseCommand(){
             `    [${sub.toUpperCase()}]`
             );
 
-            printLine(
-            `    ${subEntry.total} FILES`
-            );
+            subEntry.titles.forEach(title=>{
+
+                printLine(
+                `        ${title}`
+                );
+
+            });
 
             if(subEntry.locked > 0){
 
                 printLine(
-                `    ${subEntry.locked} HIDDEN / LOCKED`,
+                `        ${subEntry.locked} HIDDEN / LOCKED`,
                 "warning"
                 );
 
