@@ -102,7 +102,7 @@ ZETA-1 VEIL
 
 title: "Zeta-1 Veil",
 
-category: "Factions",
+category: "Projects",
 
 clearance: 1,
 
@@ -211,7 +211,7 @@ DEATHSEEKERS
 
 title: "Deathseekers",
 
-category: "Factions",
+category: "Projects",
 
 clearance: 1,
 
@@ -305,8 +305,6 @@ FILE ID: PROJECT COVET
 CLASSIFICATION:
 DIVISION 9 PROTOTYPE WARFARE PROJECT
 
----------------------------------------
-
 ERROR 0xA143
 
 FILE STATUS:
@@ -314,23 +312,6 @@ EXISTS
 
 DOCUMENT STATUS:
 UNAVAILABLE
-
----------------------------------------
-
-Possible causes:
-
-> FILE CORRUPTION
-
-> ARCHIVE FAILURE
-
-> CLEARANCE MISMATCH
-
-> DOCUMENT PENDING RECOVERY
-
-
-Recovery attempt failed.
-
-Further access requires administrator clearance.
 `
 
 },
