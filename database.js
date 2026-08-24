@@ -1167,6 +1167,266 @@ xezyex1rdrgdsjpr16umx1bz99nfd02i
 NO FURTHER DATA RECOVERABLE.
 `
 
+},
+
+
+
+
+/*
+===========================================================
+LOGS - BREAK ROOM 2, LOWER ADMIN WING
+===========================================================
+*/
+
+
+"break room intercept 2": {
+
+title: "Break Room Intercept — Lower Admin Wing",
+
+category: "Logs",
+
+subcategory: "Helios Intercepts",
+
+clearance: 0,
+
+content:
+`
+FILE ID: INTERCEPT_BR2-θ4 [UNSCHEDULED]
+
+CLASSIFICATION:
+PASSIVE AUDIO CAPTURE // HELIOS COMPLIANCE ENGINE
+
+SOURCE:
+BREAK ROOM 2, LOWER ADMIN WING — SHIFT CHANGEOVER
+
+NOTE:
+Same anomaly as prior captures from this sublevel. No
+maintenance ticket, no access request on file. Helios
+was simply already recording.
+
+---------------------------------------
+
+[11:02:07] VOSS: —no I'm telling you, I pulled it up yesterday and today it's just gone. not redacted, not locked. gone. like it never existed
+
+[11:02:19] PRATT: gone how. gone like moved, or gone like—
+
+[11:02:22] VOSS: gone like the entry doesn't resolve. "no such record." I've read that file a hundred times, Pratt, I didn't imagine it
+
+[11:02:31] PRATT: did you ask IT
+
+[11:02:33] VOSS: IT said there's no log of it ever being indexed. no creation date. nothing
+
+[11:02:40] PRATT: that's norm̸al for this place though, isn't it
+
+[11:02:44] VOSS: it's not NORMAL, it's just common. there's a difference
+
+▓▓▓ SIGNAL LOSS — 0.4s ▓▓▓
+
+[11:03:0#] PRATT: —okay but even if it's true, what are you gonna do about it. file a ticket that goes nowhere?
+
+[11:03:09] VOSS: I don't know. I just don't like that nobody else seems to think it's weird
+
+[11:03:16] PRATT: I think it's weird. I just also think saying it's weird out loud in here is a great way to end up like the file
+
+[11:03:24] VOSS: ...fair
+
+[11:03:27] PRATT: fair. drink your coffee, Voss
+
+[11:03:31] VOSS: it's cold
+
+[11:03:33] PRATT: it's always cold. that's not new either
+
+ERR_SEGMENT//2A — text unrecoverable —
+
+[11:04:02] VOSS: hey, do you remember what it was even about? the file
+
+[11:04:09] PRATT: ...no. actually, no, I don't
+
+[11:04:14] VOSS: neither do I
+
+[11:04:19] PRATT: ...let's just go back up
+
+[END OF CAPTURE — 11:04:26]
+`
+
+},
+
+
+
+
+/*
+===========================================================
+LOGS - EXECUTIVE COMMONS, LEVEL 0
+===========================================================
+*/
+
+
+"executive commons intercept 3": {
+
+title: "Executive Commons Intercept — Level 0",
+
+category: "Logs",
+
+subcategory: "Helios Intercepts",
+
+clearance: 0,
+
+content:
+`
+FILE ID: INTERCEPT_EC0-μ2 [UNSCHEDULED]
+
+CLASSIFICATION:
+PASSIVE AUDIO CAPTURE // HELIOS COMPLIANCE ENGINE
+
+SOURCE:
+EXECUTIVE COMMONS, LEVEL 0 — CLOSED-DOOR REFRESHMENT BREAK
+
+ATTENDEES (PARTIAL, VOICEPRINT MATCH):
+DIRECTOR OKONKWO-REYNE, COMMANDER ASH, LIAISON DUVALL,
+ONE UNIDENTIFIED VOICE
+
+NOTE:
+Attendees believed this room was unmonitored. It has
+never been unmonitored.
+
+---------------------------------------
+
+[19:41:03] OKONKWO-REYNE: —say what you want about the man, but I will not drink the Ferro-Brew swill they put in the lower wings. it tastes like a printed circuit board
+
+[19:41:14] ASH: that's because it IS partially a printed circuit board, technically, by weight
+
+[19:41:19] DUVALL: that's classified
+
+[19:41:21] ASH: it's not classified, it's on the LABEL, Duvall
+
+[19:41:26] OKONKWO-REYNE: regardless. I've had Vantablack Roast flown in from the Cygnus concession stands and it is, unequivocally, superior
+
+[19:41:35] DUVALL: Vantablack isn't even company-approved anymore, they pulled the license after the — the incident
+
+[19:41:41] OKONKWO-REYNE: the "incident" was one building
+
+[19:41:45] ASH: it was one building that they said was load-bearing
+
+[19:41:48] OKONKWO-REYNE: allegedly load-bearing
+
+UNIDENTIFIED VOICE: [inaudible — possible laughter]
+
+▓▓▓ SIGNAL LOSS — 0.7s ▓▓▓
+
+[19:42:1#] DUVALL: —personally I've gone back to Meridian Stim. approved, reliable, doesn't do the thing where your hands shake by 1400
+
+[19:42:22] ASH: Meridian tastes like an apology
+
+[19:42:26] DUVALL: it tastes like COMPLIANCE, Ash, which is more than I can say for whatever's in your mug right now
+
+[19:42:33] ASH: this is tea
+
+[19:42:35] OKONKWO-REYNE: is it, though
+
+[19:42:38] ASH: ...it's mostly tea
+
+ERR_SEGMENT//1F — audio unrecoverable —
+
+[19:43:07] OKONKWO-REYNE: put it to a vote, then. next quarter's stock order. Ferro-Brew, Meridian, or we petition procurement for Vantablack again and let them tell us no a second time
+
+[19:43:19] DUVALL: I vote we stop having meetings about coffee
+
+[19:43:22] ASH: seconded
+
+[19:43:24] OKONKWO-REYNE: motion noted and ignored. Meridian it is
+
+[END OF CAPTURE — 19:43:31]
+`
+
+},
+
+
+
+
+/*
+===========================================================
+LOGS - RECOVERED CHAT HISTORY
+===========================================================
+*/
+
+
+"recovered chatlog df-2": {
+
+title: "Recovered Chatlog — [REDACTED] / [REDACTED]",
+
+category: "Logs",
+
+subcategory: "Recovered Chat History",
+
+clearance: 1,
+
+content:
+`
+FILE ID: CHATLOG_DF-2 [OFFICE WORKER WITNESS]
+
+CLASSIFICATION:
+RECOVERED CHAT HISTORY
+
+SOURCE:
+EXTRACTED FROM A FRESHLY INCINERATED DATABASE BROWSER //
+HARD DRIVE LEFT MOSTLY INTACT
+
+PARTICIPANTS:
+[REDACTED] AND [REDACTED]
+
+---------------------------------------
+
+12:47 [A] yo [B], you online?
+
+12:47 [B] yup, what's up?
+
+12:48 [A] today's lunch break was...weird. weirder than usual. was curious if you know anything?
+
+12:48 [B] ok..?
+
+12:49 [A] so while standing in line for rations, a couple Div9 operatives were seated in a group near me, and I overheard some shit. there's always a lot of rumors and "witnesses", sure, but this one felt kinda off.
+
+12:50 [B] go on..
+
+12:52 [A] I didn't quite understand much of it, but they seemed uneasy, which in itself freaked me out. I though I kept hearing "depth seeker"? Or something like that. again, I didn't quite catch the wording I could barely hear it since they were talking fast and, like, in hushed tones. and they also kept glancing to port, down that one foul-smelling causeway (you know the one). I took a glance too, but I didn't see anything.
+
+12:54 [B] yeah...I think I know where this is going.
+
+12:54 [A] for real?
+
+12:55 [B] did you hear anything else they said?
+
+12:56 [A] not really. some mumblings about difficult missions and other nightmares these guys went through (at least that's my assumption). I mean, fuck, I can only imagine what kinds of daily horrors those Div9 operatives face. but again, these guys in particular kept glancing in that same direction, and I've never seen Div9-ers act like that. and I should know that, I'm the one who spends a lot of time around them.
+
+12:57 [B] alright...
+
+12:57 [B] could you tell me if by any chance you've seen...I don't know, like some crazy blood-soaked operative in that causeway?
+
+12:57 [A] ...now that I think about it, I think I saw a dark figure sitting against panels in the shadows in one of those maintenance nooks. it was another Div9-er, that's for sure, and he did have some, uh...redness on him. ring any bells?
+
+12:58 [B] I think these guys were talking about him. wait, I think maybe they were saying...I mean, shit I think it might have been "Death Seeker"...
+
+12:58 [A] what's that exactly? I don't think I've heard that through the rumor mill.
+
+12:58 [B] I might be wrong here...I mean, BSLSK allows operatives to color their suits whatever they want...but I've heard from co-workers that the "Death Seekers" used to wear these colors. it could be a fraud or some lunatic anyway. and I guess that would explain why he was skulking in the shadows.
+
+12:59 [A] ok, but what's a "Death Seeker"?
+
+13:01 [B] can't say for sure... there's been a lot of alleged groups forming recently, with all kinds of operatives. some are tight friend groups, some are just a bunch of loonies, some are veterans hoping to survive another deployment, and all other bs. I'm not really up to date with this rumor, but my co-workers talk about the name "Death Seekers" like it's some echoing ghost of the past. I don't know much of the context here, and I'm not sure I want to.
+
+13:02 [A] huh, strange. I guess you're right though - if it's a rumor, it's probably nonsense.
+
+13:02 [B] exactly. in fact...maybe don't snoop around those kinds of groups, and especially that nutjob in the causeway. who knows what they'd do to a person who they decided was "too curious".
+
+13:02 [A] understood. anyway, I won't keep you any longer from your lunch. you really don't want to know what's on the menu.
+
+13:03 [B] don't tell me...fuck, it's triple-boiled eel-and-tofu ration bars again isn't it
+
+13:03 [A] put some of that garlic-flavored algea foam on it. at least that way it's edible.
+
+13:03 [B] whatever man. c ya.
+`
+
 }
 
 
