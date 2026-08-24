@@ -673,6 +673,311 @@ DOCUMENT STATUS:
 REDACTED
 `
 
+},
+
+
+
+/*
+===========================================================
+WEAPONS - STANDARD ISSUE
+===========================================================
+*/
+
+
+"hyperion m-type high-energy beam weapon system": {
+
+title: "Hyperion M-Type High-energy Beam Weapon System",
+
+category: "Weapons",
+
+subcategory: "Standard Issue",
+
+clearance: 0,
+
+content:
+`
+The Hyperion pulls energy from a charged cartridge and releases it as raw photonic energy, resulting in maximum annihilation with minimal recoil.
+`
+
+},
+
+
+
+"dmr": {
+
+title: "DMR",
+
+category: "Weapons",
+
+subcategory: "Standard Issue",
+
+clearance: 0,
+
+content:
+`
+ERROR 0xA143
+
+FILE STATUS:
+EXISTS
+
+DOCUMENT STATUS:
+UNAVAILABLE
+`
+
+},
+
+
+
+"raider's assault rifle": {
+
+title: "Mark-4 Vanguard Raider's Assault Rifle",
+
+category: "Weapons",
+
+subcategory: "Standard Issue",
+
+clearance: 0,
+
+content:
+`
+Rugged and versatile, the Mark-4 is designed to deliver results under any circumstances.
+`
+
+},
+
+
+
+
+/*
+===========================================================
+FACTIONS - MISCELLANEOUS
+===========================================================
+*/
+
+
+"starslaved reavers": {
+
+title: "Starslaved Reavers",
+
+category: "Factions",
+
+subcategory: "Miscellaneous",
+
+clearance: 0,
+
+content:
+`
+The "starslaved" are a disorganized collection of people who exist at the fringes of inhabited space, and in the vast empty spaces in between star systems. There's no one ideology, ethnicity, or origin which ties the Starslaved together. Not all starslaved are reavers or raiders, or hostile at all, but the reavers are the only ones that venture far afield, ranging into the "civilized" sectors of space and camping out along the intergalactic transport routes.
+
+There's no organization, just hundreds or thousands of individual tribes or gangs of marauders who drift across space, attacking any vessel or settlement that looks vulnerable enough. A frequent reaver tactic is to ram a vessel with their own vessel in order to incapacitate it, then board by directly climbing from one ship to the other. This means that a reaver ship will often be in terrible shape, since they basically just choose whichever vessel of the two was the least damaged by the collision and repair it using cannibalized parts from the other one. (They never expect to stay on any given ship forever, so there's no incentive to patch it up any more than absolutely necessary.)
+`
+
+},
+
+
+
+
+/*
+===========================================================
+FACTIONS - SOVEREIGN FACTIONS
+===========================================================
+*/
+
+
+"morningstar fellowship": {
+
+title: "Morningstar Fellowship",
+
+category: "Factions",
+
+subcategory: "Sovereign Factions",
+
+clearance: 0,
+
+content:
+`
+The Morningstar Fellowship is an isolationist but evangelical religious state whose adherents travel widely to spread their faith while tightly controlling access to their own worlds. Believers regard Venus as the spiritual center of the universe and often treat pilgrimage there as a major religious aspiration. The Faithful are known for enthusiasm, suspicion of outsiders, and sharply divided views on cybernetic modification.
+`
+
+},
+
+
+
+"cygnus directorate": {
+
+title: "Cygnus Directorate",
+
+category: "Factions",
+
+subcategory: "Sovereign Factions",
+
+clearance: 0,
+
+content:
+`
+The Cygnus Directorate is an expansionist, highly organized civilization known for manners, meritocratic rhetoric, adaptability, and steady territorial assimilation. Cygnusians often present themselves as civilizers and modernizers, though critics see this as a polished justification for conquest.
+`
+
+},
+
+
+
+"popular quorum of colonial representatives": {
+
+title: "PQCR - Popular Quorum of Colonial Representatives",
+
+category: "Factions",
+
+subcategory: "Sovereign Factions",
+
+clearance: 0,
+
+content:
+`
+The PQCR governs large colonial populations, especially across M33, and presents itself as a representative body defending ordinary colonists. Critics describe it as corrupt, heavily propagandized, and economically dependent on mining, farming, laboratory, and factory labor. Its political leadership is widely believed to be strongly influenced by OM3GA.
+`
+
+},
+
+
+
+"arkhyron hierarchy": {
+
+title: "Arkhyron Hierarchy",
+
+category: "Factions",
+
+subcategory: "Sovereign Factions",
+
+clearance: 0,
+
+content:
+`
+The Arkhyron Hierarchy is a highly structured, militarized society organized around strict bureaucracy, chain of command, and elaborate legal-moral codes. Its central figure, the Arkhyrodim, is treated as the symbolic and political heart of the state. Arkhyrons value discipline, protocol, loyalty, and technological systems that reinforce order.
+`
+
+},
+
+
+
+"phaedrus collective": {
+
+title: "Phaedrus Collective",
+
+category: "Factions",
+
+subcategory: "Sovereign Factions",
+
+clearance: 0,
+
+content:
+`
+The Phaedrus Collective is a decentralized polity made up of semi-autonomous nodes linked by dense digital civic networks. Its citizens, usually called Consociates, are known for information-sharing, pragmatism, invention, and rapid cooperative response during crises.
+`
+
+},
+
+
+
+
+/*
+===========================================================
+FACTIONS - CORPORATE FACTIONS
+===========================================================
+*/
+
+
+"om3ga": {
+
+title: "OM3GA",
+
+category: "Factions",
+
+subcategory: "Corporate Factions",
+
+clearance: 0,
+
+content:
+`
+OM3GA is a powerful industrial corporation known for mining, fabrication, heavy construction, and brute-force engineering solutions. Its ships, machines, and infrastructure are often less elegant than its competitors' products, but famously durable, heavily armored, and aggressively warrantied. OM3GA's political and commercial influence is especially strong in resource-rich sectors such as M33.
+`
+
+},
+
+
+
+"rekevvin technologies": {
+
+title: "Rekevvin Technologies",
+
+category: "Factions",
+
+subcategory: "Corporate Factions",
+
+clearance: 0,
+
+content:
+`
+Rekevvin Technologies emerged from the collapse of a larger consortium and is now regarded as one of the more secretive firms in advanced weapons and experimental technology. Public and industry rumors connect RekTek to nanotech, black-market systems, weaponized disease research, and disputed biomedical acquisitions, though the company rarely comments on such claims.
+`
+
+},
+
+
+
+"basilisk group divisional conglomerate": {
+
+title: "Basilisk Group Divisional Conglomerate",
+
+category: "Factions",
+
+subcategory: "Corporate Factions",
+
+clearance: 0,
+
+content:
+`
+Basilisk Group is a segmented industrial and technology conglomerate with major interests in robotics, shipbuilding, transport, asteroid mining, weapons, equipment, demolitions, and data intrusion. It is known for blunt corporate messaging, aggressive efficiency, and a results-first culture that prizes performance over sentiment.
+`
+
+},
+
+
+
+"guanyin biomedical guild": {
+
+title: "Guanyin Biomedical Guild",
+
+category: "Factions",
+
+subcategory: "Corporate Factions",
+
+clearance: 0,
+
+content:
+`
+The Guanyin Biomedical Guild is a sprawling biomedical organization made up of specialized research guilds, subsidiaries, and laboratories. Its best-known divisions include the Chrysalis Guild, focused on regeneration and life-extension research, the Lotus Guild, associated with biomedical data and specimen acquisition, and the Many Hands Guild, a highly disciplined security and military division.
+`
+
+},
+
+
+
+"lattimer holdings incorporated": {
+
+title: "Lattimer Holdings Incorporated",
+
+category: "Factions",
+
+subcategory: "Corporate Factions",
+
+clearance: 0,
+
+content:
+`
+Lattimer Holdings is one of the oldest continuous megacorporations, known for its vast reserves of raw materials, manufactured goods, trade contracts, and liquid credit. Its public image is conservative, transactional, and old-fashioned: a company that solves problems through ownership, leverage, logistics, and money.
+`
+
 }
 
 
