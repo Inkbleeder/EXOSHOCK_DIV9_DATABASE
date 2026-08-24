@@ -978,6 +978,195 @@ content:
 Lattimer Holdings is one of the oldest continuous megacorporations, known for its vast reserves of raw materials, manufactured goods, trade contracts, and liquid credit. Its public image is conservative, transactional, and old-fashioned: a company that solves problems through ownership, leverage, logistics, and money.
 `
 
+},
+
+
+
+
+/*
+===========================================================
+LOGS - HELIOS INTERCEPTS
+===========================================================
+*/
+
+
+"maintenance intercept 7c": {
+
+title: "Maintenance Intercept // Uplink 7-C",
+
+category: "Logs",
+
+subcategory: "Helios Intercepts",
+
+clearance: 0,
+
+content:
+`
+FILE ID: INTERCEPT_7C-δ9 [UNSCHEDULED]
+
+CLASSIFICATION:
+PASSIVE AUDIO CAPTURE // HELIOS COMPLIANCE ENGINE
+
+SOURCE:
+SERVER WING 4, SUBLEVEL 2 — ROUTINE MAINT. WINDOW
+
+NOTE:
+This log was not requested. Helios appears to retain
+passive audio from all sublevels under its jurisdiction
+regardless of maintenance status. Flagged for review by
+[REDACTED]. Review never completed.
+
+---------------------------------------
+
+[00:14:02] REYES: —yeah no it's fine, just gimme the torque driver, the panel's stripped again
+
+[00:14:09] OKAFOR: third one this week. somebody upstairs keeps over-tightening these
+
+[00:14:15] REYES: somebody upstairs doesn't have to climb back d̸own here at 3am to fix it either
+
+[00:14:22] OKAFOR: true. hey did you eat? I brought the noodle thing again
+
+[00:14:30] REYES: the one that tastes like a battery?
+
+[00:14:33] OKAFOR: it's an ACQUIRED taste, Reyes
+
+[00:14##47] ▓▓▓ SIGNAL LOSS — 0.6s ▓▓▓
+
+[00:14:53] REYES: —anyway pass me the reader, I wanna check the fan array before we close this up
+
+[00:15:01] OKAFOR: hang on, hang on. before you seal it, can you just run a [djsdgje-bug] pass on it? last time we skipped that the whole rack flagged itself red for a week
+
+[00:15:11] REYES: yeah yeah, relax, I'm already halfway through [de-jhtlajshf] on it, gimme like ninety seconds
+
+[00:15:19] OKAFOR: ninety seconds, sure. that's what you said about the coolant line too
+
+[00:15:24] REYES: the coolant line was a SEPARATE issue
+
+[00:15:29] OKAFOR: uh huh
+
+ERR_SEGMENT//4B — text unrecoverable — text unrecoverable —
+
+[00:16:0#] OKAFOR: —so is it clean or not
+
+[00:16:12] REYES: clean. green across the board. panel's back on, we're good
+
+[00:16:18] OKAFOR: finally. you want the last of the noodles or are you still mad about the battery thing
+
+[00:16:25] REYES: gimme the noodles, Okafor
+
+[00:16:29] OKAFOR: there she is
+
+[END OF CAPTURE — 00:16:41]
+`
+
+},
+
+
+
+
+/*
+===========================================================
+RESTRICTED - UNCLASSIFIED FRAGMENTS
+===========================================================
+*/
+
+
+"fragment fx-14": {
+
+title: "Fragment FX-14",
+
+category: "Restricted",
+
+subcategory: "Unclassified Fragments",
+
+clearance: 1,
+
+content:
+`
+FILE ID: [UNREADABLE]
+
+FILE STATUS:
+CORRUPTED — NO CLEAN COPY ON RECORD
+
+DOCUMENT STATUS:
+RECOVERED FROM DEGRADED SECTOR // BEST EFFORT RENDER
+
+---------------------------------------
+
+oHBvRPOIvGrviFlbCBFNOgmBjMtpsiaOclRzAwzK16bVRJNwVGFYGWWmQzCudiHYFjSo
+nXkMtECqOxSFOGYRdoXKXWNqRsrpEmoKiuPKdYRosjOrUxxDOCzUZRENktUNpfZpdJQI
+PvjiQvlblZXOIgf5wDHJoKyrbmEYYmdhQjAruHriwRxpVHSbKdAuuQgwLgGoTogmMJXw
+KixhAmUfBHXzTPDPkFFufEwixIIqejKQhmbNiwusMtTZqpXchcHPOEVBl
+
+jOlOAEtoDOECVEgPRqfNiIukkePyez20MGGqbWbaduDrppGDZuVzGPMMicIbLRdPEczj
+GDpiAFwPKafeNZDKYAYQyydSbsuyjqtfJMSNDlviDvUDDleghKDgF18EmErPZHkPlmCn
+FaqlkhUQNqtUPQZIqpTdUwEAdnkGEiNgQIWEPXSKcitTnzphAqjTqGIQHGvjJRSmNtVN
+roQgfQDF9bRCAVxIoQKvcjtbjAHEsJiCXljJbICTXyCWNrPqGWxjanvJPK
+
+zzLaBLvVyazqvzPRKysGYCeOMdWTyOOBqMZVRExRWpgZriVBHQLlQCGmbWuy6bmgHYkM
+QCtbAhziruvvqMXbEqVnUqHuTgTqaUZsSjIMaqYrvLnkTZjATSNbylmpUdccrNgeyyvK
+qFSgqonVFwPrTOzMJBCPenxEdaokMtsYfZPJpsAwxGxbOLzshdDjPHdIzdqhjmUw25nu
+gbjcKvecQwPoRxxhfoPRcEtSPRVUiFIJOYsJtNEaaVidaDNaYxlsBwkYe
+
+---------------------------------------
+
+NO FURTHER DATA RECOVERABLE.
+`
+
+},
+
+
+
+
+/*
+===========================================================
+RESTRICTED - CLASS-2 FRAGMENTS
+===========================================================
+*/
+
+
+"fragment fx-22": {
+
+title: "Fragment FX-22",
+
+category: "Restricted",
+
+subcategory: "Class-2 Fragments",
+
+clearance: 2,
+
+content:
+`
+FILE ID: [UNREADABLE]
+
+FILE STATUS:
+CORRUPTED — NO CLEAN COPY ON RECORD
+
+DOCUMENT STATUS:
+RECOVERED FROM DEGRADED SECTOR // BEST EFFORT RENDER
+
+---------------------------------------
+
+ujzde8gxd6ncf10epf91dhodzdoc9is0j8hY9lgmxg9edn581u33xtplpft75v2seh
+60kvj50ce9uvw53efr4edt2sywb3wkh5dnsipzz5fk2zTri19r0wyojfljooa5lqsa
+j08xui6d39zzzzg4zdmen2khvdgaj8gxbenyjqwx4hh5344tfjgvq4k7bnIxj8b7tf
+q7xkwo886vompzom75wbbr4qmw2wxfog
+
+o4mvn4a4wfhym4l1vfz3Lfkkibj3j4wj99ibag7i1mnbqns6puq80idw3706i8j76b
+2lajlj4h9du7794g9dpmrcg629be2u66mrA6846p7q9m2i0hz2uep1enthjxjqi3og
+z5kok16zv0mwufxbv932byv7s6ehogfqrclri1qzj865ufrdN1erbfqfoeqh3av90r
+ic7phkqdlmtt7ns26lrwbqcab69m64p2
+
+g158z6tnovmizwdiaeq1kdfy6spsc3lkr2aqxv9upctnwlavyfIr6mp6afqfjzczbt
+tof7jyu5jsjc616i76bofbcixgy29db8p5qa3e68f7e4qeqpno35ye4scmejvqtia4
+d5rgn5s7s333h9mtf4bs3e62rynnFfj7qxi6rhxo55zbka52ztj0wyuhvauvzhmasq
+xezyex1rdrgdsjpr16umx1bz99nfd02i
+
+---------------------------------------
+
+NO FURTHER DATA RECOVERABLE.
+`
+
 }
 
 
