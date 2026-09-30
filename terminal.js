@@ -17,11 +17,13 @@ let isLoggedIn = false;
 let isAdmin = false;
 let clearanceLevel = 0;
 let currentUser = "GUEST";
+let isMuted = false;
 
 
 const feed = document.getElementById("terminal-output");
 const input = document.getElementById("command-input");
 const status = document.getElementById("connection-status");
+const tabHint = document.getElementById("tab-hint");
 
 
 /*
@@ -116,6 +118,8 @@ Object.keys(sounds).forEach(name=>{
 
 function playSound(name){
 
+    if(isMuted) return;
+
     let sound = sounds[name];
 
     if(!sound) return;
@@ -140,6 +144,80 @@ function playSound(name){
         sound.play().catch(()=>{});
 
     }
+
+}
+
+
+
+/*
+===========================================================
+MUTE / UNMUTE
+
+Sets the native .muted flag on every <audio> element (rather
+than just gating playSound()), so anything already looping -
+ambience, the idle track - goes silent or comes back
+immediately without needing to restart. Works with or
+without being logged in, same as 'clear'.
+===========================================================
+*/
+
+function setMuted(muted){
+
+    isMuted = muted;
+
+    Object.values(sounds).forEach(sound=>{
+
+        sound.muted = isMuted;
+
+    });
+
+}
+
+
+function muteCommand(){
+
+    if(isMuted){
+
+        printLine(
+        "SOUND ALREADY MUTED",
+        "warning"
+        );
+
+        return;
+
+    }
+
+    setMuted(true);
+
+    printLine(
+    "SOUND MUTED",
+    "system"
+    );
+
+}
+
+
+function unmuteCommand(){
+
+    if(!isMuted){
+
+        printLine(
+        "SOUND ALREADY UNMUTED",
+        "warning"
+        );
+
+        return;
+
+    }
+
+    setMuted(false);
+
+    playSound("success");
+
+    printLine(
+    "SOUND UNMUTED",
+    "success"
+    );
 
 }
 
@@ -182,12 +260,16 @@ function startAmbience(){
 
 /*
 ===========================================================
-SECRET CREDITS COMMAND
+CREDITS COMMAND
 
-Not listed in "help" - only discoverable if a database
-entry tells the player the command word. Change
-CREDITS_COMMAND to whatever word you plant in that entry,
-and edit the CREDITS_TEXT array with your contributors.
+Listed in "help" for every logged-in account (see
+LOGGED_IN_HELP below) - no longer a hidden puzzle command.
+Change CREDITS_COMMAND to rename it, and edit the
+CREDITS_TEXT array with your contributors. (If this goes
+back to being a hidden/puzzle command later, just delete its
+entry from LOGGED_IN_HELP below and it'll behave exactly
+like "manifest" used to - still fully working, just
+unlisted and no longer tab-completable.)
 ===========================================================
 */
 
@@ -200,8 +282,9 @@ ADMIN-ONLY COMMANDS
 Every command name listed here automatically shows up in
 the 'help' output, but only when isAdmin is true. Add a
 new admin-only OR hidden/puzzle command by: 1) adding its
-name here, and 2) adding its case + function like forceidle
-below.
+name here (plus a one-line flavor description in
+ADMIN_COMMAND_DESCRIPTIONS below), and 2) adding its case +
+function like forceidle below.
 
 Note: this list includes puzzle/ARG commands like "petrify"
 and "debug" too. They're still fully hidden from every other
@@ -212,6 +295,52 @@ every command that exists, in one place.
 */
 
 const ADMIN_ONLY_COMMANDS = [ "forceidle", "petrify", "debug", "finality" ];
+
+const ADMIN_COMMAND_DESCRIPTIONS = {
+
+    forceidle: "trigger the idle banner immediately (testing)",
+    petrify: "??? unknown signal",
+    debug: "??? unknown signal",
+    finality: "??? unknown signal"
+
+};
+
+
+/*
+===========================================================
+HELP REGISTRY
+
+The single source of truth for what 'help' displays AND for
+what Tab-completion offers when completing a bare command
+name (see availableCommandWords() near autoComplete()) - so
+the two can never drift out of sync. Each usage string's
+first word is the actual typable command; anything after
+that is just the argument hint shown in help.
+===========================================================
+*/
+
+const GUEST_HELP = [
+
+    { usage: "login <username> <password>", description: "authenticate with the system" },
+    { usage: "mute", description: "silence all audio" },
+    { usage: "unmute", description: "restore audio" },
+    { usage: "clear", description: "wipe the screen" }
+
+];
+
+const LOGGED_IN_HELP = [
+
+    { usage: "database", description: "list every category you can access" },
+    { usage: "read <entry / category / subcategory>", description: "open a file, or list a category/subcategory" },
+    { usage: "search <term>", description: "search titles and file contents" },
+    { usage: "whoami", description: "show current session identity" },
+    { usage: "mute", description: "silence all audio" },
+    { usage: "unmute", description: "restore audio" },
+    { usage: "logout", description: "end session" },
+    { usage: "clear", description: "wipe the screen" },
+    { usage: CREDITS_COMMAND, description: "show project credits" }
+
+];
 
 const CREDITS_TEXT = [
 
@@ -384,11 +513,38 @@ let isPrinting = false;
 let fastForward = false;
 
 
-function printLine(text, type=""){
+// Optional 3rd arg: a search term to highlight (reverse-video style,
+// see .hl in style.css) once the line finishes typing out. Leave it
+// null/omitted for every normal line - only search() uses this.
+function printLine(text, type="", highlightTerm=null){
 
     return new Promise(resolve=>{
 
-        printQueue.push({ text, type, resolve });
+        printQueue.push({ kind:"line", text, type, highlightTerm, resolve });
+
+        if(!isPrinting){
+
+            processQueue();
+
+        }
+
+    });
+
+}
+
+
+// A bordered "command box" for help output - a bold header line
+// (the usage string) with a smaller description underneath, visually
+// separated from the next command by its own border. Renders
+// instantly (no per-character typing - a box doesn't really lend
+// itself to that) but still goes through the same shared queue, so
+// it still appears in the correct order relative to any printLine()
+// calls around it.
+function printCommandBox(usage, description, className=""){
+
+    return new Promise(resolve=>{
+
+        printQueue.push({ kind:"box", usage, description, className, resolve });
 
         if(!isPrinting){
 
@@ -408,6 +564,43 @@ async function processQueue(){
     while(printQueue.length > 0){
 
         let item = printQueue.shift();
+
+
+        if(item.kind === "box"){
+
+            let box = document.createElement("div");
+
+            box.className = "help-entry"
+                + (item.className ? " " + item.className : "");
+
+            let header = document.createElement("div");
+
+            header.className = "help-entry-title";
+
+            header.textContent = item.usage;
+
+            box.appendChild(header);
+
+
+            let desc = document.createElement("div");
+
+            desc.className = "help-entry-desc";
+
+            desc.textContent = item.description;
+
+            box.appendChild(desc);
+
+
+            feed.appendChild(box);
+
+            feed.scrollTop = feed.scrollHeight;
+
+            item.resolve();
+
+            continue;
+
+        }
+
 
         let line = document.createElement("div");
 
@@ -458,6 +651,17 @@ async function processQueue(){
         line.removeChild(blockCursor);
 
 
+        // If this line has a highlight term, swap the plain text
+        // node for the highlighted HTML version now that typing is
+        // done - the typewriter effect plays out normally and then
+        // the matched text "lights up" right at the end.
+        if(item.highlightTerm){
+
+            line.innerHTML = highlightHTML(item.text, item.highlightTerm);
+
+        }
+
+
         item.resolve();
 
     }
@@ -465,6 +669,75 @@ async function processQueue(){
     isPrinting = false;
 
     fastForward = false;
+
+}
+
+
+
+/*
+===========================================================
+HIGHLIGHT HELPERS
+
+Used by printLine()'s highlightTerm option (currently just
+search()). Escapes the line's text manually and wraps every
+case-insensitive occurrence of the term in <span class="hl">,
+rather than using a regex, so a search term containing regex
+special characters (parentheses, etc.) can't break anything.
+===========================================================
+*/
+
+function escapeHTML(text){
+
+    return text
+
+        .replace(/&/g, "&amp;")
+
+        .replace(/</g, "&lt;")
+
+        .replace(/>/g, "&gt;");
+
+}
+
+
+function highlightHTML(text, term){
+
+    if(!term) return escapeHTML(text);
+
+    let lowerText = text.toLowerCase();
+
+    let lowerTerm = term.toLowerCase();
+
+    if(lowerTerm === "") return escapeHTML(text);
+
+
+    let result = "";
+
+    let i = 0;
+
+    while(i < text.length){
+
+        let idx = lowerText.indexOf(lowerTerm, i);
+
+        if(idx === -1){
+
+            result += escapeHTML(text.slice(i));
+
+            break;
+
+        }
+
+        result += escapeHTML(text.slice(i, idx));
+
+        result +=
+            `<span class="hl">`
+            + escapeHTML(text.slice(idx, idx + term.length))
+            + `</span>`;
+
+        i = idx + term.length;
+
+    }
+
+    return result;
 
 }
 
@@ -525,6 +798,7 @@ let historyIndex = -1;
 let tabMatches = [];
 let tabIndex = -1;
 let tabBase = null;
+let tabPrefix = "read ";
 
 
 input.addEventListener(
@@ -561,6 +835,10 @@ async function(event){
 
         event.preventDefault();
 
+        tabBase = null;
+
+        clearTabHint();
+
         if(commandHistory.length === 0) return;
 
         historyIndex = Math.max(historyIndex - 1, 0);
@@ -577,6 +855,10 @@ async function(event){
     if(event.key === "ArrowDown"){
 
         event.preventDefault();
+
+        tabBase = null;
+
+        clearTabHint();
 
         if(commandHistory.length === 0) return;
 
@@ -610,6 +892,8 @@ async function(event){
         // next Tab press starts a fresh match from what's typed.
         tabBase = null;
 
+        clearTabHint();
+
         return;
 
     }
@@ -634,6 +918,8 @@ async function(event){
 
     tabBase = null;
 
+    clearTabHint();
+
 
     this.value="";
 
@@ -650,24 +936,169 @@ async function(event){
 ===========================================================
 TAB COMPLETION
 
-Only completes the argument after "read " - matches against
-every entry key, category, and subcategory name. Pressing
-Tab repeatedly cycles through multiple matches.
+Three completion modes, picked from the input's current shape:
+
+  1. Still typing the command word itself (no space yet, e.g.
+     "sea") - completes against every command actually
+     available in the current login/admin state (see
+     availableCommandWords() - built from the same
+     GUEST_HELP / LOGGED_IN_HELP / ADMIN_ONLY_COMMANDS
+     registry "help" uses, so the two can't drift apart). An
+     empty input matches everything, so tapping Tab on a blank
+     prompt cycles through the full command list.
+
+  2. "read <name>" / "read subcategory <name>" - completes
+     against entry titles + category/subcategory names (or,
+     with the subcategory prefix, subcategory names only).
+
+  3. "search <term>" - same title/category/subcategory pool as
+     "read", offered as a convenient starting point (search
+     itself isn't restricted to these, they're just reasonable
+     things to search for).
+
+Whichever mode matched, pressing Tab repeatedly cycles through
+every match, wrapping back around to the first once it reaches
+the end, with a small "(2/5)" style counter next to the cursor.
+
+IMPORTANT: once a cycle is underway (tabBase !== null), this
+function must NOT re-derive the query from el.value - el.value
+IS the previous suggestion at that point, so re-parsing it would
+treat that suggestion as a brand new query and immediately break
+the cycle after a single step. Only a fresh Tab press (tabBase
+still null, reset by any other keystroke / history recall /
+Enter - see the keydown handler above) is allowed to rebuild the
+match list.
 ===========================================================
 */
 
 function autoComplete(el){
 
+    // Already mid-cycle: just advance, don't touch the query.
+    if(tabBase !== null){
+
+        tabIndex = (tabIndex + 1) % tabMatches.length;
+
+        applyTabMatch(el);
+
+        return;
+
+    }
+
+
     let value = el.value;
 
     let parts = value.split(" ");
 
+    let firstWord = parts[0].toLowerCase();
 
-    if(parts[0].toLowerCase() !== "read") return;
+
+    let query;
+
+    let candidates;
+
+    let prefix;
 
 
-    let query = parts.slice(1).join(" ").toLowerCase();
+    if(parts.length === 1){
 
+        // Mode 1: still typing the command word.
+        query = firstWord;
+
+        candidates = availableCommandWords()
+
+            .filter(name => name.startsWith(query))
+
+            .sort((a,b) => a.localeCompare(b))
+
+            // A trailing space so the cursor lands ready for an
+            // argument, the way real shell completion does.
+            .map(name => name + " ");
+
+        prefix = "";
+
+    }
+
+    else if(firstWord === "read"){
+
+        // Mode 2: "read subcategory <name>" completes against
+        // subcategory names only; bare "read <name>" completes
+        // against titles + category/subcategory names.
+        let usingSubPrefix =
+            parts[1]
+            &&
+            parts[1].toLowerCase() === "subcategory";
+
+        query = usingSubPrefix
+            ? parts.slice(2).join(" ").toLowerCase()
+            : parts.slice(1).join(" ").toLowerCase();
+
+        prefix = usingSubPrefix ? "read subcategory " : "read ";
+
+        candidates = usingSubPrefix
+            ? subcategoryCandidates(query)
+            : readArgumentCandidates(query);
+
+    }
+
+    else if(firstWord === "search"){
+
+        // Mode 3: same candidate pool as a bare "read <name>".
+        query = parts.slice(1).join(" ").toLowerCase();
+
+        prefix = "search ";
+
+        candidates = readArgumentCandidates(query);
+
+    }
+
+    else{
+
+        return;
+
+    }
+
+
+    if(candidates.length === 0) return;
+
+
+    tabBase = query;
+
+    tabMatches = candidates;
+
+    tabIndex = 0;
+
+    tabPrefix = prefix;
+
+    applyTabMatch(el);
+
+}
+
+
+
+// Every command word usable right now, given login/admin state -
+// built from the same registry "help" renders from, so Tab
+// completion and "help" can never list different things.
+function availableCommandWords(){
+
+    let list = (isLoggedIn ? LOGGED_IN_HELP : GUEST_HELP)
+
+        .map(entry => entry.usage.split(" ")[0]);
+
+    if(isLoggedIn && isAdmin){
+
+        list = list.concat(ADMIN_ONLY_COMMANDS);
+
+    }
+
+    return list;
+
+}
+
+
+
+// Candidate pool shared by "read <name>" and "search <term>" -
+// every entry title plus every category/subcategory name.
+function readArgumentCandidates(query){
 
     // Categories & subcategories - case-insensitive either way,
     // so lowercase works fine for both matching and inserting.
@@ -703,7 +1134,7 @@ function autoComplete(el){
     });
 
 
-    let candidates = [
+    return [
 
         ...[...categoryNames].filter(name => name.startsWith(query)),
 
@@ -711,28 +1142,59 @@ function autoComplete(el){
 
     ].sort((a,b) => a.toLowerCase().localeCompare(b.toLowerCase()));
 
-
-    if(candidates.length === 0) return;
-
-
-    if(tabBase !== query){
-
-        tabBase = query;
-
-        tabMatches = candidates;
-
-        tabIndex = 0;
-
-    }
-
-    else{
-
-        tabIndex = (tabIndex + 1) % tabMatches.length;
-
-    }
+}
 
 
-    el.value = "read " + tabMatches[tabIndex];
+
+// Candidate pool for "read subcategory <name>" - subcategory
+// names only.
+function subcategoryCandidates(query){
+
+    let subNames = new Set();
+
+    Object.values(database).forEach(entry=>{
+
+        if(entry.subcategory){
+
+            subNames.add(entry.subcategory.toLowerCase());
+
+        }
+
+    });
+
+    return [...subNames]
+
+        .filter(name => name.startsWith(query))
+
+        .sort((a,b) => a.localeCompare(b));
+
+}
+
+
+
+function applyTabMatch(el){
+
+    el.value = tabPrefix + tabMatches[tabIndex];
+
+    updateTabHint();
+
+}
+
+
+
+function updateTabHint(){
+
+    tabHint.textContent = tabMatches.length > 1
+        ? `(${tabIndex + 1}/${tabMatches.length})`
+        : "";
+
+}
+
+
+
+function clearTabHint(){
+
+    tabHint.textContent = "";
 
 }
 
@@ -766,6 +1228,22 @@ async function execute(text){
 
 
 
+        case "mute":
+
+            muteCommand();
+
+        break;
+
+
+
+        case "unmute":
+
+            unmuteCommand();
+
+        break;
+
+
+
         case "help":
 
             if(!isLoggedIn){
@@ -775,13 +1253,11 @@ async function execute(text){
                 "success"
                 );
 
-                printLine(
-                "login <username> <password>"
-                );
+                GUEST_HELP.forEach(entry=>{
 
-                printLine(
-                "clear"
-                );
+                    printCommandBox(entry.usage, entry.description);
+
+                });
 
             }
 
@@ -792,32 +1268,19 @@ async function execute(text){
                 "success"
                 );
 
-                printLine(
-                "database"
-                );
+                LOGGED_IN_HELP.forEach(entry=>{
 
-                printLine(
-                "read <entry / category>"
-                );
+                    printCommandBox(entry.usage, entry.description);
 
-                printLine(
-                "whoami"
-                );
-
-                printLine(
-                "logout"
-                );
-
-                printLine(
-                "clear"
-                );
+                });
 
                 if(isAdmin){
 
                     ADMIN_ONLY_COMMANDS.forEach(cmd=>{
 
-                        printLine(
+                        printCommandBox(
                         cmd,
+                        ADMIN_COMMAND_DESCRIPTIONS[cmd] || "???",
                         "warning"
                         );
 
@@ -870,6 +1333,16 @@ async function execute(text){
         case "read":
 
             readEntry(
+                args.slice(1).join(" ")
+            );
+
+        break;
+
+
+
+        case "search":
+
+            searchCommand(
                 args.slice(1).join(" ")
             );
 
@@ -1357,6 +1830,79 @@ async function readEntry(name){
 
 
 
+    // 0. Explicit "subcategory <name>" syntax - forces a
+    // subcategory-only lookup, bypassing categories and titles
+    // entirely. The bare "read <name>" form below already falls
+    // back to matching a subcategory (step 5), so this exists
+    // purely to disambiguate on demand.
+    if(name.toLowerCase().startsWith("subcategory ")){
+
+        let subName = name.slice("subcategory ".length).trim();
+
+        if(subName === ""){
+
+            playSound("error");
+
+            printLine(
+            "USAGE: read subcategory <name>",
+            "error"
+            );
+
+            return;
+
+        }
+
+        let subMatches = Object.keys(database).filter(entry=>
+
+            database[entry].subcategory
+            &&
+            database[entry].subcategory.toLowerCase()
+            ===
+            subName.toLowerCase()
+            &&
+            hasAccessTo(database[entry])
+
+        );
+
+        if(subMatches.length > 0){
+
+            playSound("success");
+
+            printLine(
+            `SUBCATEGORY: ${subName.toUpperCase()}`,
+            "success"
+            );
+
+            subMatches.forEach(entry=>{
+
+                printLine(
+                `[${database[entry].title.toUpperCase()}]`
+                );
+
+            });
+
+            return;
+
+        }
+
+        playSound("error");
+
+        printLine(
+        "ERROR 0xA143",
+        "error"
+        );
+
+        printLine(
+        "FILE NOT FOUND",
+        "error"
+        );
+
+        return;
+
+    }
+
+
+
     // 1. Direct key match - case-insensitive. Keys are internal
     // IDs now, not what's displayed, so exact case no longer
     // matters here the way it used to.
@@ -1557,6 +2103,162 @@ async function readEntry(name){
     "error"
     );
 
+
+}
+
+
+
+/*
+===========================================================
+SEARCH
+
+Full-text search across title, category, subcategory and
+body content - unlike 'read', which only matches against
+titles/categories/subcategories, this digs into the actual
+file contents. Locked entries are filtered out by
+hasAccessTo() exactly like everywhere else, so a search never
+reveals that a clearance-gated file even exists.
+
+Each result prints its title (highlighted if the term appears
+there) plus, when the match is inside the body content, a
+short excerpt around it with the match highlighted too - so
+it's clear at a glance *why* something matched instead of
+just *that* it did.
+===========================================================
+*/
+
+function searchCommand(term){
+
+    if(!isLoggedIn){
+
+        playSound("error");
+
+        printLine(
+        "ERROR: LOGIN REQUIRED",
+        "error"
+        );
+
+        return;
+
+    }
+
+
+    term = term.trim();
+
+    if(term === ""){
+
+        playSound("error");
+
+        printLine(
+        "USAGE: search <term>",
+        "error"
+        );
+
+        return;
+
+    }
+
+
+    let query = term.toLowerCase();
+
+    let results = Object.keys(database).filter(k=>{
+
+        let entry = database[k];
+
+        if(!hasAccessTo(entry)) return false;
+
+        let haystack = (
+            entry.title
+            + " "
+            + entry.category
+            + " "
+            + (entry.subcategory || "")
+            + " "
+            + entry.content
+        ).toLowerCase();
+
+        return haystack.includes(query);
+
+    });
+
+
+    if(results.length === 0){
+
+        playSound("error");
+
+        printLine(
+        `NO RESULTS FOR "${term}"`,
+        "error"
+        );
+
+        return;
+
+    }
+
+
+    playSound("success");
+
+    printLine(
+    `SEARCH RESULTS FOR "${term}" (${results.length}):`,
+    "success"
+    );
+
+    results.forEach(k=>{
+
+        let entry = database[k];
+
+        let location = entry.subcategory
+            ? `${entry.category} / ${entry.subcategory}`
+            : entry.category;
+
+        printLine(
+        `    [${location.toUpperCase()}] ${entry.title}`,
+        "",
+        term
+        );
+
+        let snippet = buildSnippet(entry.content, query);
+
+        if(snippet){
+
+            printLine(
+            `        "${snippet}"`,
+            "system",
+            term
+            );
+
+        }
+
+    });
+
+}
+
+
+// Grabs a short window of text around the first occurrence of
+// `query` inside `content`, collapses any newlines/extra
+// whitespace so it reads as one clean line, and adds an ellipsis
+// on whichever side got trimmed. Returns null if the term isn't
+// actually in the content (e.g. it only matched the title).
+function buildSnippet(content, query, radius=40){
+
+    let lower = content.toLowerCase();
+
+    let idx = lower.indexOf(query);
+
+    if(idx === -1) return null;
+
+
+    let start = Math.max(0, idx - radius);
+
+    let end = Math.min(content.length, idx + query.length + radius);
+
+    let snippet = content.slice(start, end).replace(/\s+/g, " ").trim();
+
+    if(start > 0) snippet = "…" + snippet;
+
+    if(end < content.length) snippet = snippet + "…";
+
+    return snippet;
 
 }
 
