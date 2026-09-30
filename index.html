@@ -26,14 +26,17 @@
     <!-- CRT Overlay -->
     <div id="crt-overlay"></div>
 
-    <!-- Scanline Overlay (moving green sweep, old-monitor style) -->
-    <div id="scanline-overlay"></div>
-
     <!-- Idle Banner (appears after ~5min idle with a cleared screen) -->
     <div id="idle-banner"><pre id="idle-banner-text"></pre></div>
 
     <!-- Terminal -->
     <main id="terminal">
+
+        <!-- Scanline Overlay (moving green sweep, old-monitor style).
+             Lives inside #terminal now (not a full-page sibling) so
+             the sweep is clipped to the box itself instead of
+             bleeding across the whole viewport. -->
+        <div id="scanline-overlay"></div>
 
         <!-- Header -->
         <header id="terminal-header">
@@ -63,6 +66,8 @@
             />
 
             <span class="cursor" id="input-cursor"></span>
+
+            <span id="tab-hint"></span>
 
         </footer>
 
