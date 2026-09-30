@@ -89,7 +89,12 @@ body::before{
 
 #scanline-overlay{
 
-    position:fixed;
+    /* Was position:fixed / full-viewport inset. Now lives inside
+       #terminal (see index.html) so it's positioned relative to
+       the box itself and clipped by #terminal's own
+       overflow:hidden - the sweep no longer bleeds across the
+       background outside the terminal. */
+    position:absolute;
 
     inset:0;
 
@@ -248,6 +253,19 @@ body::before{
     color:var(--green);
 }
 
+#tab-hint{
+
+    font-size:.8em;
+
+    opacity:.55;
+
+    margin-left:8px;
+
+    white-space:nowrap;
+    flex-shrink:0;
+
+}
+
 #command-input{
 
     flex:1;
@@ -292,6 +310,68 @@ body::before{
 
 .hidden{
     display:none;
+}
+
+/* ===========================================================
+   Search Highlight
+
+   Reverse-video style (bright bg, dark text) for the matched
+   term inside search results - matches the classic
+   grep/less --color look rather than just changing the text
+   colour, so it stays legible against every account theme
+   since it reads off --green rather than a fixed colour.
+   =========================================================== */
+
+.hl{
+    background:var(--green);
+    color:var(--bg);
+    padding:0 2px;
+    border-radius:2px;
+}
+
+/* ===========================================================
+   Help Command Boxes
+
+   Each command in "help" gets its own small bordered box: a
+   bold header (the usage string) with a dimmer description
+   underneath, so commands read as distinct entries instead of
+   one long list. Renders instantly (see printCommandBox()) with
+   a quick fade-in rather than the usual per-character typing.
+   =========================================================== */
+
+.help-entry{
+    border:1px solid var(--border);
+    background:rgba(var(--green-rgb),.04);
+    padding:8px 12px;
+    margin:6px 0;
+    animation:help-fade-in .15s ease;
+}
+
+.help-entry-title{
+    font-weight:bold;
+    color:var(--green);
+    letter-spacing:1px;
+}
+
+.help-entry-desc{
+    margin-top:4px;
+    font-size:.82em;
+    opacity:.7;
+}
+
+.help-entry.warning .help-entry-title{
+    color:var(--yellow);
+}
+
+@keyframes help-fade-in{
+    from{
+        opacity:0;
+        transform:translateY(-2px);
+    }
+    to{
+        opacity:1;
+        transform:translateY(0);
+    }
 }
 
 /* ===========================================================
@@ -522,6 +602,133 @@ body.theme-basilisk{
 
     100%{
         transform:translateX(0px);
+    }
+
+}
+
+
+/* ===========================================================
+   Responsive - Phones
+
+   The base layout above assumes a desktop-sized viewport
+   (min(1300px,95vw) box, generous padding, 2px border). Below
+   ~700px that reads as cramped rather than "retro terminal", so
+   this lets the box fill the screen instead of floating in a
+   sea of background, and trims padding/font-size to match.
+
+   100dvh (falls back to 100vh on older browsers, then gets
+   overridden below on engines that support dvh) accounts for
+   mobile browser chrome resizing the viewport when the URL bar
+   shows/hides, so the terminal doesn't get clipped behind it.
+   =========================================================== */
+
+@media (max-width:700px){
+
+    body{
+        padding:0;
+    }
+
+    #terminal{
+
+        width:100vw;
+        height:100vh;
+        height:100dvh;
+
+        border-width:1px;
+
+        box-shadow:none;
+
+    }
+
+    #terminal-header{
+
+        flex-wrap:wrap;
+
+        gap:8px;
+
+        padding:10px;
+
+        font-size:11px;
+
+        letter-spacing:1px;
+
+    }
+
+    #terminal-output{
+
+        padding:14px;
+
+        font-size:14px;
+
+        line-height:1.45;
+
+    }
+
+    #terminal-input{
+
+        padding:12px;
+
+        gap:8px;
+
+    }
+
+    #command-input{
+
+        /* Stay at (or above) 16px - iOS Safari auto-zooms the page
+           on focus for any input with a smaller computed font-size,
+           which is exactly the kind of thing that makes a "terminal"
+           feel broken on a phone. */
+        font-size:16px;
+
+    }
+
+    #tab-hint{
+
+        font-size:.75em;
+
+        margin-left:6px;
+
+    }
+
+    .help-entry{
+
+        padding:6px 10px;
+
+        margin:4px 0;
+
+    }
+
+    .help-entry-desc{
+
+        font-size:.78em;
+
+    }
+
+    .loading{
+
+        width:160px;
+
+    }
+
+}
+
+
+@media (max-width:420px){
+
+    #terminal-header{
+
+        font-size:10px;
+
+        gap:6px;
+
+        padding:8px;
+
+    }
+
+    .divider{
+
+        display:none;
+
     }
 
 }
