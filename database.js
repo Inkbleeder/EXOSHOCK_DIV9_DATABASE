@@ -1954,6 +1954,183 @@ PARTICIPANTS:
 13:03 [B] whatever man. c ya.
 `
 
+},
+
+/*
+===========================================================
+LOGS - RECORDS ANNEX, REVIEW DESK 3
+
+Puzzle log. Helios "glitches" three times in this chat, and each
+leak reveals one third of the hidden command (see blackjack.js):
+
+    [Definitly..........]  +  [.........Office....]  +  [...............Work]
+
+Read in order, the three pieces form the command.
+===========================================================
+*/
+
+
+"recovered chatlog ow-3": {
+
+title: "Recovered Chatlog — Records Annex // Review Desk 3",
+
+category: "Logs",
+
+subcategory: "Recovered Chat History",
+
+clearance: 0,
+
+content:
+`
+FILE ID: CHATLOG_OW-3 [RECORDS ANNEX — SHIFT CHANNEL]
+
+CLASSIFICATION:
+RECOVERED CHAT HISTORY
+
+SOURCE:
+RECORDS ANNEX, REVIEW DESK 3 // INTERNAL STAFF CHANNEL
+(AUTO-ARCHIVED. NO ONE ON RECORD ENABLED THIS.)
+
+PARTICIPANTS:
+ABARA (ENTRY REVIEW), LINDQVIST (CONTRACT REPORTS),
+DOYLE (ARCHIVE INTAKE), HELIOS COMPLIANCE ENGINE
+
+NOTE:
+Integrity flags raised during this session: 3.
+Source of all three: HELIOS. Cause undetermined.
+Flags were reviewed and closed without comment.
+
+---------------------------------------
+
+09:02 [DOYLE] morning. who touched the intake queue overnight? it's full of new completion reports
+
+09:03 [LINDQVIST] that's the Div9 batch. half of them just say "done" with a smiley face
+
+09:03 [DOYLE] a smiley face is not a debrief
+
+09:04 [LINDQVIST] it is to them. I've logged a whole stack of them already and I'm still on my first coffee
+
+09:04 [ABARA] one of mine listed the cause of delay as "vibes". compliance wants free-text fields verbatim so that's what went in
+
+09:05 [LINDQVIST] vibes is a perfectly valid cause of delay out there
+
+09:06 [ABARA] on the review side, somebody filed a weapons entry under misc hazards again
+
+09:06 [DOYLE] was it the plasma one
+
+09:06 [ABARA] it's always the plasma one
+
+09:07 [DOYLE] I'll re-index it. again. I'm going to put a sticky note on the plasma one
+
+09:08 [LINDQVIST] you can't sticky note a database entry
+
+09:08 [DOYLE] watch me
+
+09:15 [LINDQVIST] quick break? I need to rest my eyes before the next stack
+
+09:15 [DOYLE] break room terminal. quick hand of cards
+
+09:16 [ABARA] oh here we go
+
+09:16 [LINDQVIST] I'm not playing you, Doyle. you lose and then you sulk
+
+09:16 [DOYLE] I do not sulk. I strategise
+
+09:17 [ABARA] last time you "strategised" down to nothing and I had to talk you out of the stairwell
+
+09:17 [DOYLE] the shoe was cold that day. it's a known thing
+
+09:18 [LINDQVIST] it's a computer, Doyle. the shoe is not cold
+
+09:18 [LINDQVIST] anyway, for the record, my high score is still the one to beat on this floor. not that I'm keeping track
+
+09:19 [ABARA] you are literally keeping track
+
+09:19 [LINDQVIST] ok I'm keeping track
+
+09:19 [ABARA] mine's better though. nobody's touched my best run since I set it. I have a reputation. the guy who restocks the vending machine nods at me now
+
+09:20 [DOYLE] he nods at everyone
+
+09:20 [ABARA] he nods at me DIFFERENTLY
+
+09:21 [DOYLE] it wipes itself every time the terminal reboots, you know. none of us can prove anything
+
+09:21 [LINDQVIST] I have witnesses
+
+09:21 [DOYLE] your witnesses also believe the vending machine guy is a retired operative
+
+09:22 [LINDQVIST] he IS a retired operative
+
+09:22 [ABARA] he IS
+
+09:23 [HELIOS] Courtesy notice. Recreational module access during duty hours is permitted, though m̸onitored. Module handle on file: ▓▓▓ [Definitly▒▒▒▒▒▒▒▒▒▒] ▓▓▓ — handle disclosure is not auth#rized. Disregard this message.
+
+09:23 [DOYLE] ...did Helios just talk to us
+
+09:24 [LINDQVIST] it does that. it's been doing it since the last firmware pass
+
+09:24 [ABARA] it never says anything useful, though
+
+09:24 [DOYLE] it said something just now
+
+09:25 [LINDQVIST] it said "disregard". so. disregard
+
+09:31 [ABARA] speaking of reviews: I flagged another Known Hostiles entry for outdated info. the "last seen" date is older than the building
+
+09:31 [DOYLE] half the entries are older than the building
+
+09:32 [ABARA] the other half are older than the building's replacement
+
+09:33 [LINDQVIST] can either of you sign off on a completion report with a missing operative signature? Div9 says the operative "left it in the field"
+
+09:33 [DOYLE] left WHAT in the field, the signature?
+
+09:33 [LINDQVIST] the signature, the report, the pen, unclear
+
+09:34 [ABARA] log it as pending and move on. if the operative turns up, they sign. if not, Helios stamps it anyway
+
+09:34 [LINDQVIST] Helios stamps everything anyway
+
+09:35 [DOYLE] that's what the stamp is for
+
+09:36 [HELIOS] Productivity metrics for this channel are being ▓▓▓ [▒▒▒▒▒▒▒▒▒Office▒▒▒▒] ▓▓▓ — reviewed. Thank you for your c#ntinued complia—
+
+ERR_SEGMENT//7D — text unrecoverable —
+
+09:38 [DOYLE] ok but I want it noted that I came back from the brink last week. down to my last chip and I clawed it all the way back
+
+09:39 [ABARA] you came back to break even
+
+09:39 [DOYLE] that is a comeback in this economy
+
+09:40 [LINDQVIST] it IS a comeback. I'll allow it. my best run is still better though
+
+09:40 [ABARA] we'll settle it at lunch
+
+09:40 [LINDQVIST] we said that last time
+
+09:41 [ABARA] and it was settled. in my favour
+
+09:41 [LINDQVIST] it was settled in the cafeteria's favour. they ran out of eel-bars
+
+09:44 [HELIOS] Reminder: break duration is limited. For your convenience: ▓▓▓ [▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒Work] ▓▓▓ — end of leak — end of l#ak — Please return to your desks.
+
+09:44 [DOYLE] ok that one was rude
+
+09:45 [LINDQVIST] it's right though. break's over. back to the pile
+
+09:45 [ABARA] back to the pile
+
+09:46 [DOYLE] hey, whoever finishes first logs the plasma one
+
+09:46 [ABARA] no
+
+09:46 [LINDQVIST] no
+
+[END OF RECOVERY]
+`
+
 }
 
 
