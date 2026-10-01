@@ -258,6 +258,56 @@ function startAmbience(){
 
 
 
+let idleAudioUnlocked = false;
+
+
+function unlockIdleAudio(){
+
+    if(idleAudioUnlocked) return;
+
+    idleAudioUnlocked = true;
+
+    // Mobile browsers only allow audio playback that's triggered
+    // directly by a user gesture, or by an element that's already
+    // been "blessed" by one earlier in the page's lifetime. The
+    // idle track normally only ever plays from the setInterval
+    // check way below, with no gesture behind it at all - which is
+    // exactly why it worked from "forceidle" (typing a command is
+    // itself a gesture) but silently failed to make a sound on the
+    // natural idle timeout on phones. Playing (and immediately
+    // pausing) it here, during the same first tap/keypress that
+    // unlocks ambience, blesses the element so the later
+    // gesture-less play() call works.
+    //
+    // Force it silent for the bless itself (restoring whatever the
+    // real mute state actually was afterward) so there's never a
+    // chance of an audible blip from the brief play()->pause()
+    // round trip, regardless of how long that actually takes.
+    let wasMuted = sounds.idle.muted;
+
+    sounds.idle.muted = true;
+
+    sounds.idle.play().then(()=>{
+
+        sounds.idle.pause();
+
+        sounds.idle.currentTime = 0;
+
+        sounds.idle.muted = wasMuted;
+
+    }).catch(()=>{
+
+        // Blocked anyway (rare) - let it try again next gesture.
+        sounds.idle.muted = wasMuted;
+
+        idleAudioUnlocked = false;
+
+    });
+
+}
+
+
+
 /*
 ===========================================================
 CREDITS COMMAND
@@ -807,6 +857,8 @@ async function(event){
 
 
     startAmbience();
+
+    unlockIdleAudio();
 
     registerActivity();
 
@@ -2780,6 +2832,12 @@ function showIdleBanner(){
 
     idleBannerText.textContent = IDLE_BANNER;
 
+    // Clear any shrink-to-fit font-size left over from a previous
+    // showing before measuring below, so that measurement reflects
+    // the banner's natural (CSS clamp()) size, not last time's
+    // already-shrunk size.
+    idleBannerText.style.fontSize = "";
+
     idleBannerEl.classList.add("visible");
 
     playSound("idle");
@@ -2796,6 +2854,14 @@ function showIdleBanner(){
     idleBannerEl.style.height = terminalRect.height + "px";
 
 
+    // On a narrow phone, clamp()'s own floor plus the banner's
+    // fixed letter-spacing can still add up to wider (or taller)
+    // than the box itself, which is why it wasn't rendering
+    // properly on mobile - shrink it further, in JS, until it
+    // actually fits.
+    fitIdleBannerToBox(terminalRect);
+
+
     // Start somewhere inside the console, moving in a random direction.
     let bannerRect = idleBannerText.getBoundingClientRect();
 
@@ -2810,6 +2876,40 @@ function showIdleBanner(){
     lastFrameTime = performance.now();
 
     idleBounceFrame = requestAnimationFrame(stepBounce);
+
+}
+
+
+// Shrinks idleBannerText's font-size (if needed) so the ASCII art
+// actually fits inside the terminal box on both axes. clamp()'s CSS
+// floor is a reasonable default for most screens, but on a narrow
+// phone the fixed 2px letter-spacing alone can push the natural
+// width past the available space - this catches that case
+// directly by measuring, instead of guessing at more breakpoints.
+function fitIdleBannerToBox(terminalRect){
+
+    let computed = getComputedStyle(idleBannerText);
+
+    let baseFontSize = parseFloat(computed.fontSize);
+
+    let naturalRect = idleBannerText.getBoundingClientRect();
+
+    let padding = 24; // small margin off the box edges
+
+    let availableWidth  = Math.max(terminalRect.width  - padding, 10);
+    let availableHeight = Math.max(terminalRect.height - padding, 10);
+
+    let scale = Math.min(
+        1,
+        availableWidth  / naturalRect.width,
+        availableHeight / naturalRect.height
+    );
+
+    if(scale < 1){
+
+        idleBannerText.style.fontSize = Math.max(baseFontSize * scale, 4) + "px";
+
+    }
 
 }
 
@@ -2943,6 +3043,8 @@ document.body.onclick=()=>{
     input.focus();
 
     startAmbience();
+
+    unlockIdleAudio();
 
     registerActivity();
 
