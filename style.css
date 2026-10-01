@@ -732,3 +732,770 @@ body.theme-basilisk{
     }
 
 }
+
+
+/* ===========================================================
+   TWENTY-ONE (hidden minigame - see blackjack.js)
+
+   Styled as a slightly-too-polished corporate leisure product:
+   thin rules, spaced small caps, restrained colour. Everything
+   reads off the theme variables (--green, --border, ...) so it
+   recolours per account automatically. Win / lose / push reuse
+   the terminal's own blue / red / yellow.
+
+   Note: #terminal-output is white-space:pre-wrap, so panels
+   reset to normal and only the card <pre>s use pre.
+   =========================================================== */
+
+.bj-panel{
+
+    max-width:560px;
+
+    margin:10px 0 16px;
+
+    border:1px solid var(--border);
+
+    background:rgba(var(--green-rgb),.03);
+
+    white-space:normal;
+
+    line-height:1.4;
+
+    animation:help-fade-in .18s ease;
+
+}
+
+.bj-head{
+
+    display:flex;
+
+    justify-content:space-between;
+
+    align-items:center;
+
+    gap:12px;
+
+    padding:7px 12px;
+
+    border-bottom:1px solid var(--border);
+
+    background:rgba(var(--green-rgb),.1);
+
+    font-size:.78em;
+
+    letter-spacing:2px;
+
+}
+
+.bj-title{
+
+    font-weight:bold;
+
+}
+
+.bj-tag{
+
+    opacity:.7;
+
+    letter-spacing:1px;
+
+    text-align:right;
+
+}
+
+.bj-body{
+
+    padding:12px 14px 14px;
+
+}
+
+
+/* ---- table ---- */
+
+.bj-row-label{
+
+    display:flex;
+
+    justify-content:space-between;
+
+    align-items:center;
+
+    margin:8px 0 6px;
+
+    font-size:.75em;
+
+    letter-spacing:3px;
+
+    opacity:.9;
+
+}
+
+.bj-row-label:first-child{
+
+    margin-top:0;
+
+}
+
+.bj-total{
+
+    padding:1px 9px;
+
+    border:1px solid var(--border);
+
+    font-weight:bold;
+
+    letter-spacing:1px;
+
+}
+
+.bj-total.ok{
+
+    color:var(--blue);
+
+    border-color:var(--blue);
+
+}
+
+.bj-total.bust{
+
+    color:var(--red);
+
+    border-color:var(--red);
+
+}
+
+.bj-cards{
+
+    position:relative;
+
+    overflow-x:auto;
+
+    overflow-y:hidden;
+
+    scrollbar-width:none;
+
+}
+
+.bj-cards::-webkit-scrollbar{
+
+    display:none;
+
+}
+
+.bj-pre{
+
+    margin:0;
+
+    font-family:inherit;
+
+    font-size:15px;
+
+    line-height:1;
+
+    white-space:pre;
+
+}
+
+.bj-probe{
+
+    position:absolute;
+
+    visibility:hidden;
+
+    pointer-events:none;
+
+}
+
+.bj-s{
+
+    display:inline-block;
+
+    width:1ch;
+
+    text-align:center;
+
+    overflow:visible;
+
+}
+
+.bj-r{
+
+    color:#ff6b6b;
+
+    text-shadow:0 0 6px rgba(255,85,85,.5);
+
+}
+
+.bj-d{
+
+    opacity:.55;
+
+}
+
+
+/* ---- status / result ---- */
+
+.bj-status{
+
+    display:flex;
+
+    justify-content:space-between;
+
+    align-items:center;
+
+    gap:10px;
+
+    margin-top:12px;
+
+    padding:8px 10px;
+
+    border-left:3px solid var(--green);
+
+    background:rgba(var(--green-rgb),.07);
+
+    font-size:.85em;
+
+    letter-spacing:1px;
+
+}
+
+.bj-status:empty,
+.bj-status.empty{
+
+    display:none;
+
+}
+
+.bj-status.win{   border-color:var(--blue);   color:var(--blue);   background:rgba(85,207,255,.08); }
+.bj-status.lose{  border-color:var(--red);    color:var(--red);    background:rgba(255,85,85,.08);  }
+.bj-status.push{  border-color:var(--yellow); color:var(--yellow); background:rgba(255,224,102,.07);}
+
+.bj-delta{
+
+    font-weight:bold;
+
+    font-size:1.1em;
+
+    white-space:nowrap;
+
+}
+
+
+/* ---- buttons ---- */
+
+.bj-actions{
+
+    display:flex;
+
+    flex-wrap:wrap;
+
+    gap:8px;
+
+    margin-top:12px;
+
+}
+
+.bj-actions:empty{
+
+    display:none;
+
+}
+
+.bj-btn{
+
+    font-family:inherit;
+
+    font-size:.82em;
+
+    font-weight:bold;
+
+    letter-spacing:2px;
+
+    color:var(--green);
+
+    background:transparent;
+
+    border:1px solid var(--green);
+
+    padding:8px 16px;
+
+    cursor:pointer;
+
+    text-shadow:inherit;
+
+    touch-action:manipulation;
+
+    transition:background .12s ease, color .12s ease;
+
+}
+
+.bj-btn:hover{
+
+    background:var(--green);
+
+    color:var(--bg);
+
+    text-shadow:none;
+
+}
+
+.bj-btn:active{
+
+    transform:translateY(1px);
+
+}
+
+.bj-btn.alt{
+
+    border-color:var(--border);
+
+    opacity:.8;
+
+}
+
+.bj-actions.spent{
+
+    opacity:.25;
+
+    pointer-events:none;
+
+}
+
+
+/* ---- text blocks ---- */
+
+.bj-big{
+
+    font-size:1.7em;
+
+    font-weight:bold;
+
+    letter-spacing:8px;
+
+    margin:4px 0 2px;
+
+}
+
+.bj-big.lose{
+
+    color:var(--red);
+
+}
+
+.bj-sub{
+
+    font-size:.72em;
+
+    letter-spacing:2px;
+
+    opacity:.65;
+
+    margin-bottom:10px;
+
+}
+
+.bj-copy{
+
+    margin:8px 0;
+
+    font-size:.88em;
+
+    opacity:.85;
+
+}
+
+.bj-foot{
+
+    margin-top:10px;
+
+    font-size:.74em;
+
+    letter-spacing:.5px;
+
+    opacity:.6;
+
+}
+
+.bj-foot:empty{
+
+    display:none;
+
+}
+
+.bj-foot em{
+
+    font-style:normal;
+
+    color:var(--green);
+
+    border-bottom:1px dotted var(--green);
+
+}
+
+.bj-fine{
+
+    margin-top:12px;
+
+    padding-top:8px;
+
+    border-top:1px solid var(--border);
+
+    font-size:.66em;
+
+    line-height:1.5;
+
+    opacity:.4;
+
+}
+
+.bj-newrec{
+
+    margin:8px 0;
+
+    padding:6px 10px;
+
+    text-align:center;
+
+    letter-spacing:3px;
+
+    font-size:.8em;
+
+    font-weight:bold;
+
+    color:var(--yellow);
+
+    border:1px solid var(--yellow);
+
+    background:rgba(255,224,102,.07);
+
+}
+
+
+/* ---- manual ---- */
+
+.bj-section{
+
+    margin:14px 0 6px;
+
+    padding-bottom:3px;
+
+    border-bottom:1px solid var(--border);
+
+    font-size:.72em;
+
+    letter-spacing:3px;
+
+    opacity:.75;
+
+}
+
+.bj-section:first-child{
+
+    margin-top:0;
+
+}
+
+.bj-cmd{
+
+    display:flex;
+
+    gap:12px;
+
+    margin:3px 0;
+
+    font-size:.86em;
+
+}
+
+.bj-cmd b{
+
+    flex:0 0 11ch;
+
+    color:var(--green);
+
+}
+
+.bj-cmd span{
+
+    opacity:.8;
+
+}
+
+
+/* ---- stats ---- */
+
+.bj-stats{
+
+    display:grid;
+
+    grid-template-columns:1fr 1fr;
+
+    gap:1px;
+
+    margin:10px 0;
+
+    border:1px solid var(--border);
+
+    background:var(--border);
+
+}
+
+.bj-stat{
+
+    display:flex;
+
+    justify-content:space-between;
+
+    gap:8px;
+
+    padding:7px 10px;
+
+    background:var(--panel);
+
+    font-size:.76em;
+
+    letter-spacing:1px;
+
+}
+
+.bj-stat span{
+
+    opacity:.65;
+
+}
+
+.bj-stat.wide{
+
+    grid-column:1 / -1;
+
+    color:var(--yellow);
+
+}
+
+
+/* ---- HUD: chips / bet / score / high ---- */
+
+#bj-hud{
+
+    flex-shrink:0;
+
+    display:flex;
+
+    flex-wrap:wrap;
+
+    align-items:center;
+
+    justify-content:space-between;
+
+    gap:6px 20px;
+
+    padding:8px 18px;
+
+    border-top:1px solid var(--border);
+
+    background:rgba(var(--green-rgb),.06);
+
+    font-size:.8em;
+
+    letter-spacing:1.5px;
+
+}
+
+#bj-hud.hidden{
+
+    display:none;
+
+}
+
+.bj-hud-group{
+
+    display:flex;
+
+    align-items:center;
+
+    gap:8px;
+
+    white-space:nowrap;
+
+}
+
+.bj-hud-label{
+
+    font-size:.82em;
+
+    opacity:.55;
+
+}
+
+.bj-hud-num{
+
+    display:inline-block;
+
+    min-width:2ch;
+
+    font-weight:bold;
+
+    text-align:right;
+
+}
+
+.bj-tray{
+
+    color:var(--yellow);
+
+    text-shadow:0 0 6px rgba(255,224,102,.55);
+
+    letter-spacing:1px;
+
+}
+
+.bj-tray.low{
+
+    color:var(--red);
+
+    text-shadow:0 0 6px rgba(255,85,85,.55);
+
+}
+
+.bj-flash-up{
+
+    animation:bj-up .8s ease;
+
+}
+
+.bj-flash-down{
+
+    animation:bj-down .8s ease;
+
+}
+
+@keyframes bj-up{
+
+    0%  { color:var(--blue); text-shadow:0 0 12px var(--blue); transform:scale(1.25); }
+    100%{ transform:scale(1); }
+
+}
+
+@keyframes bj-down{
+
+    0%  { color:var(--red); text-shadow:0 0 12px var(--red); transform:scale(.9); }
+    100%{ transform:scale(1); }
+
+}
+
+
+/* ---- phones ---- */
+
+@media (max-width:700px){
+
+    .bj-panel{
+
+        max-width:none;
+
+    }
+
+    .bj-head{
+
+        padding:6px 10px;
+
+        letter-spacing:1px;
+
+    }
+
+    .bj-body{
+
+        padding:10px;
+
+    }
+
+    .bj-pre{
+
+        font-size:13px;
+
+    }
+
+    .bj-big{
+
+        font-size:1.4em;
+
+        letter-spacing:5px;
+
+    }
+
+    .bj-actions .bj-btn{
+
+        flex:1 1 auto;
+
+        padding:11px 8px;
+
+    }
+
+    .bj-cmd b{
+
+        flex-basis:9ch;
+
+    }
+
+    #bj-hud{
+
+        padding:7px 12px;
+
+        gap:4px 14px;
+
+        font-size:.7em;
+
+        letter-spacing:1px;
+
+    }
+
+}
+
+@media (max-width:420px){
+
+    .bj-tag{
+
+        display:none;
+
+    }
+
+    .bj-stat{
+
+        font-size:.68em;
+
+        padding:6px 8px;
+
+    }
+
+}
+
+.bj-final{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:8px;
+    margin:12px 0 8px;
+}
+
+.bj-final div{
+    display:flex;
+    flex-direction:column;
+    gap:2px;
+    padding:8px 10px;
+    border:1px solid var(--border);
+    background:rgba(var(--green-rgb),.05);
+}
+
+.bj-final span{
+    font-size:.66em;
+    letter-spacing:2px;
+    opacity:.65;
+}
+
+.bj-final b{
+    font-size:1.5em;
+    letter-spacing:2px;
+}
+
+.bj-final .hi{
+    border-color:var(--yellow);
+    color:var(--yellow);
+}
