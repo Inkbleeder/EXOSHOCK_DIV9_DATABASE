@@ -344,14 +344,15 @@ every command that exists, in one place.
 ===========================================================
 */
 
-const ADMIN_ONLY_COMMANDS = [ "forceidle", "petrify", "debug", "finality" ];
+const ADMIN_ONLY_COMMANDS = [ "forceidle", "petrify", "debug", "finality", "definitlyofficework" ];
 
 const ADMIN_COMMAND_DESCRIPTIONS = {
 
     forceidle: "trigger the idle banner immediately (testing)",
     petrify: "??? unknown signal",
     debug: "??? unknown signal",
-    finality: "??? unknown signal"
+    finality: "??? unknown signal",
+    definitlyofficework: "hidden: break-room card game (see blackjack.js)"
 
 };
 
@@ -607,6 +608,26 @@ function printCommandBox(usage, description, className=""){
 }
 
 
+// Drops an already-built DOM node (e.g. the blackjack table) into the
+// feed through the same queue as everything else, so it always lands
+// in the correct order relative to typed lines.
+function printNode(node){
+
+    return new Promise(resolve=>{
+
+        printQueue.push({ kind:"node", node, resolve });
+
+        if(!isPrinting){
+
+            processQueue();
+
+        }
+
+    });
+
+}
+
+
 async function processQueue(){
 
     isPrinting = true;
@@ -614,6 +635,19 @@ async function processQueue(){
     while(printQueue.length > 0){
 
         let item = printQueue.shift();
+
+
+        if(item.kind === "node"){
+
+            feed.appendChild(item.node);
+
+            feed.scrollTop = feed.scrollHeight;
+
+            item.resolve();
+
+            continue;
+
+        }
 
 
         if(item.kind === "box"){
@@ -1263,6 +1297,15 @@ COMMAND SYSTEM
 async function execute(text){
 
 
+    // Hidden minigame (blackjack.js). Returns true if it consumed
+    // the command - otherwise falls through to the normal terminal.
+    if(typeof blackjackIntercept === "function" && blackjackIntercept(text)){
+
+        return;
+
+    }
+
+
     let args=text.split(" ");
 
     let command=args[0].toLowerCase();
@@ -1649,6 +1692,8 @@ function login(user,pass){
 
 
 function logout(){
+
+    if(typeof blackjackReset === "function") blackjackReset();
 
     isLoggedIn=false;
 
