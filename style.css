@@ -1499,3 +1499,33 @@ body.theme-basilisk{
     border-color:var(--yellow);
     color:var(--yellow);
 }
+
+
+/* ===========================================================
+   Idle banner fixes
+
+   - Opaque backdrop: the banner can now appear over a screen
+     that still has output on it, so it must hide that text
+     rather than overlap it.
+   - Phones: the stacked 12/28/55px glows, the flicker animation
+     and wide letter-spacing on a moving layer caused tearing and
+     seams between the block glyphs. Use one tight glow, no
+     flicker, no letter-spacing and line-height 1 so the blocks
+     join up cleanly.
+   =========================================================== */
+
+#idle-banner{
+    background:rgba(2,5,3,.97);
+}
+
+@media (max-width:700px){
+
+    #idle-banner-text{
+        letter-spacing:0;
+        line-height:1;
+        text-shadow:0 0 5px var(--green);
+        animation:none;
+        backface-visibility:hidden;
+    }
+
+}
