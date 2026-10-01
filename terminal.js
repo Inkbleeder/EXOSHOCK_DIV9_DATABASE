@@ -2852,6 +2852,13 @@ let bounceVX = IDLE_BANNER_SPEED;
 let bounceVY = IDLE_BANNER_SPEED;
 let lastFrameTime = 0;
 
+// Cached geometry. Reading getBoundingClientRect() and rewriting the
+// container's left/top/width/height on every animation frame forced a
+// layout each frame, which on phones showed up as tearing. Measure
+// once (and again on resize) and only touch transform per frame.
+let idleTermRect = null;
+let idleBannerRect = null;
+
 
 function registerActivity(){
 
@@ -2910,6 +2917,9 @@ function showIdleBanner(){
     // Start somewhere inside the console, moving in a random direction.
     let bannerRect = idleBannerText.getBoundingClientRect();
 
+    idleTermRect = terminalRect;
+    idleBannerRect = bannerRect;
+
     bounceX = Math.random() * Math.max(terminalRect.width  - bannerRect.width,  0);
     bounceY = Math.random() * Math.max(terminalRect.height - bannerRect.height, 0);
 
@@ -2952,7 +2962,9 @@ function fitIdleBannerToBox(terminalRect){
 
     if(scale < 1){
 
-        idleBannerText.style.fontSize = Math.max(baseFontSize * scale, 4) + "px";
+        // Whole pixels only - fractional font sizes make the block
+        // glyphs render with seams between rows on some phones.
+        idleBannerText.style.fontSize = Math.max(Math.floor(baseFontSize * scale), 4) + "px";
 
     }
 
@@ -2966,18 +2978,8 @@ function stepBounce(now){
     lastFrameTime = now;
 
 
-    let terminalRect = document.getElementById("terminal").getBoundingClientRect();
-
-    idleBannerEl.style.left   = terminalRect.left   + "px";
-    idleBannerEl.style.top    = terminalRect.top    + "px";
-    idleBannerEl.style.width  = terminalRect.width  + "px";
-    idleBannerEl.style.height = terminalRect.height + "px";
-
-
-    let bannerRect = idleBannerText.getBoundingClientRect();
-
-    let maxX = terminalRect.width  - bannerRect.width;
-    let maxY = terminalRect.height - bannerRect.height;
+    let maxX = idleTermRect.width  - idleBannerRect.width;
+    let maxY = idleTermRect.height - idleBannerRect.height;
 
 
     bounceX += bounceVX * dt;
@@ -3016,8 +3018,10 @@ function stepBounce(now){
     }
 
 
+    // Rounded to whole pixels + translate3d (own compositor layer)
+    // so the text isn't re-rasterised at sub-pixel offsets.
     idleBannerText.style.transform =
-        `translate(${bounceX}px, ${bounceY}px)`;
+        `translate3d(${Math.round(bounceX)}px, ${Math.round(bounceY)}px, 0)`;
 
 
     if(idleBannerVisible){
@@ -3027,6 +3031,33 @@ function stepBounce(now){
     }
 
 }
+
+
+// Re-measure if the viewport changes while the banner is up
+// (phone rotation, URL bar showing/hiding).
+window.addEventListener("resize", ()=>{
+
+    if(!idleBannerVisible) return;
+
+    let r = document.getElementById("terminal").getBoundingClientRect();
+
+    idleBannerEl.style.left   = r.left   + "px";
+    idleBannerEl.style.top    = r.top    + "px";
+    idleBannerEl.style.width  = r.width  + "px";
+    idleBannerEl.style.height = r.height + "px";
+
+    idleBannerText.style.fontSize = "";
+
+    fitIdleBannerToBox(r);
+
+    idleTermRect = r;
+    idleBannerRect = idleBannerText.getBoundingClientRect();
+
+});
+
+// Touch counts as activity too (scrolling on a phone fires no
+// keypress or click).
+document.addEventListener("touchstart", ()=>{ registerActivity(); }, { passive:true });
 
 
 function hideIdleBanner(){
@@ -3056,13 +3087,9 @@ setInterval(()=>{
 
     let idleFor = Date.now() - lastActivity;
 
-    let screenIsClear = feed.children.length === 0;
-
     if(
 
         !idleBannerVisible
-        &&
-        screenIsClear
         &&
         idleFor >= IDLE_MS
 
