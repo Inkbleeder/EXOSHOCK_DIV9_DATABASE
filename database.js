@@ -677,6 +677,204 @@ REDACTED
 
 
 
+
+/*
+===========================================================
+BSLSK - ITEMS
+===========================================================
+*/
+
+
+"item-drone": {
+
+title: "Deployable Drone",
+
+category: "BSLSK",
+
+subcategory: "Items",
+
+clearance: 0,
+
+content:
+`
+A compact autonomous drone stored in a collapsed transport configuration. Once deployed, it provides mobile fire support against nearby hostile targets.
+`
+
+},
+
+
+
+"item-seeker": {
+
+title: "Seeker Grenade",
+
+category: "BSLSK",
+
+subcategory: "Items",
+
+clearance: 0,
+
+content:
+`
+A guided explosive equipped with limited target acquisition and in-flight correction. Seeker grenades can alter their trajectory toward nearby targets, although sharp angles, insufficient distance, obstructions, or rapid target movement may prevent successful interception.
+`
+
+},
+
+
+
+"item-sentry": {
+
+title: "Deployable Sentry",
+
+category: "BSLSK",
+
+subcategory: "Items",
+
+clearance: 0,
+
+content:
+`
+Once thrown or placed, the sentry unfolds and anchors itself, then identifies nearby hostile targets, providing independent covering fire until destroyed.
+`
+
+},
+
+
+
+"item-hnade": {
+
+title: "Healing Grenade",
+
+category: "BSLSK",
+
+subcategory: "Items",
+
+clearance: 0,
+
+content:
+`
+A tactical medical cannister - on impact it disperses a concentrated cloud of regenerative compounds, coagulants, stimulants, and tissue-binding agents across anyone within its effective radius.
+`
+
+},
+
+
+
+"item-shield": {
+
+title: "Bubble Shield Grenade",
+
+category: "BSLSK",
+
+subcategory: "Items",
+
+clearance: 0,
+
+content:
+`
+On impact, the device generates a temporary thermal buffer of magnetically contained plasma. Anything inside the resulting field is protected from kinetic impact and directed-energy fire for a short period of time.
+`
+
+},
+
+
+
+"item-smoke": {
+
+title: "Smoke Grenade",
+
+category: "BSLSK",
+
+subcategory: "Items",
+
+clearance: 0,
+
+content:
+`
+A tactical canister with impact-triggered dispersal of aerosol which rapidly fills the surrounding area with a cloud of graphite nanoplatelets, breaking lines of sight and interfering with auto-targeting systems.
+`
+
+},
+
+
+
+"item-impact": {
+
+title: "Impact Grenade",
+
+category: "BSLSK",
+
+subcategory: "Items",
+
+clearance: 0,
+
+content:
+`
+A simple high-explosive grenade fitted with an impact detonator. The device arms immediately after deployment and detonates upon striking.
+`
+
+},
+
+
+
+"item-tnade": {
+
+title: "Timed Grenade",
+
+category: "BSLSK",
+
+subcategory: "Items",
+
+clearance: 0,
+
+content:
+`
+A conventional fragmentation grenade which detonates after a short fixed delay. The timer begins as soon as the device is armed.
+`
+
+},
+
+
+
+"item-stim": {
+
+title: "Healing Syringe",
+
+category: "BSLSK",
+
+subcategory: "Items",
+
+clearance: 0,
+
+content:
+`
+A single-use autoinjector containing a standardized mixture of coagulants, analgesics, stimulants, regenerative compounds, and other emergency medicines. It is intended to keep an injured individual functional until more comprehensive treatment becomes available.
+`
+
+},
+
+
+
+"item-map": {
+
+title: "Ship Map Projection",
+
+category: "BSLSK",
+
+subcategory: "Items",
+
+clearance: 0,
+
+content:
+`
+A navigational projection generated from the vessel's internal mapping system. This display provides a simplified representation of accessible compartments, transit routes, major systems, operative priorities, and other registered points of interest, and updates as new information becomes available.
+`
+
+},
+
+
+
 /*
 ===========================================================
 WEAPONS - STANDARD ISSUE
@@ -705,7 +903,7 @@ The Hyperion pulls energy from a charged cartridge and releases it as raw photon
 
 "dmr": {
 
-title: "DMR",
+title: "Aegis Insite Z-20",
 
 category: "Weapons",
 
@@ -715,13 +913,8 @@ clearance: 0,
 
 content:
 `
-ERROR 0xA143
-
-FILE STATUS:
-EXISTS
-
-DOCUMENT STATUS:
-UNAVAILABLE
+Designated Marksman Rifle
+A precision combat rifle designed to bridge the gap between conventional infantry weapons and dedicated long-range systems. A guardian angel that money can buy.
 `
 
 },
@@ -741,6 +934,321 @@ clearance: 0,
 content:
 `
 Rugged and versatile, the Mark-4 is designed to deliver results under any circumstances.
+`
+
+},
+
+
+
+"semi-auto-shotgun": {
+
+title: "Rampart Overload XV",
+
+category: "Weapons",
+
+subcategory: "Standard Issue",
+
+clearance: 0,
+
+content:
+`
+Semi-Automatic Shotgun
+A hard-hitting, close-quarters weapon built to deliver repeated bursts of overwhelming force without sacrificing control between shots. The professional's choice for making an impact.
+`
+
+},
+
+
+
+"verdict-railgun": {
+
+title: "C1 Verdict",
+
+category: "Weapons",
+
+subcategory: "Standard Issue",
+
+clearance: 0,
+
+content:
+`
+Hyper-velocity Railgun
+Engineered to produce devastating impact when operated by a trained marksman, the C1 Verdict delivers hyper-charged rounds with surgical accuracy.
+`
+
+},
+
+
+
+"oathbreaker-revolver": {
+
+title: "Oathbreaker S1-9",
+
+category: "Weapons",
+
+subcategory: "Standard Issue",
+
+clearance: 0,
+
+content:
+`
+Close-quarters Sidearm
+The Oathbreaker is built to unleash concentrated doses of stopping power - it's the indisputable argument which nullifies all predictions and promises.
+`
+
+},
+
+
+
+"synapse-pistol": {
+
+title: "Synapse 00",
+
+category: "Weapons",
+
+subcategory: "Standard Issue",
+
+clearance: 0,
+
+content:
+`
+Precision Sidearm
+The Synapse is a perfect balance of utility and performance, making it a highly effective tool for every aspect of combat.
+`
+
+},
+
+
+
+"full-auto-pistol": {
+
+title: "Nova Prime",
+
+category: "Weapons",
+
+subcategory: "Standard Issue",
+
+clearance: 0,
+
+content:
+`
+Fully-Automatic Sidearm
+Compact and aggressively overpowered for its size, this automatic sidearm is intended to put a large volume of fire into a target before the situation has time to become complicated.
+`
+
+},
+
+
+
+"nomad-pump-shotgun": {
+
+title: "Nomad X",
+
+category: "Weapons",
+
+subcategory: "Standard Issue",
+
+clearance: 0,
+
+content:
+`
+Operator-grade Shotgun
+This weapon is a full-impact, first-class ballistic solution to any problem that stands in your way.
+`
+
+},
+
+
+
+"mantis light machine gun": {
+
+title: "Mantis RF-900",
+
+category: "Weapons",
+
+subcategory: "Standard Issue",
+
+clearance: 0,
+
+content:
+`
+The Mantis RF-900 unloads crushing volume with every trigger pull - unyielding and brutal, with a presence that commands attention.
+`
+
+},
+
+
+
+
+/*
+===========================================================
+KNOWN HOSTILES - RUSHERS
+===========================================================
+*/
+
+
+"drone": {
+
+title: "Drone",
+
+category: "Known Hostiles",
+
+subcategory: "Rushers",
+
+clearance: 0,
+
+content:
+`
+A small autonomous hoverbot equipped with light weaponry - fast, difficult to track at close range, and frequently deployed in groups to harass or suppress.
+`
+
+},
+
+
+
+"droid": {
+
+title: "Alpha Construct - Service Systems",
+
+category: "Known Hostiles",
+
+subcategory: "Rushers",
+
+clearance: 0,
+
+content:
+`
+The original Alpha Construct was probably produced by BSLSK, but since then the design has been reverse engineered and copied by almost everyone. These service bots are specifically designed to have no specific function, but are general purpose robots for all kinds of tasks or jobs. They are very strong and fast, though, and a single message can be sent by a ship that turns all of its Alphas into killing machines.
+`
+
+},
+
+
+
+"rusher-droid": {
+
+title: "Alpha Construct - Rusher",
+
+category: "Known Hostiles",
+
+subcategory: "Rushers",
+
+clearance: 0,
+
+content:
+`
+A combat-tuned variant of the common Alpha Construct service unit. Rushers retain the speed and physical strength of the standard platform, but have been behaviorally modified to close distance aggressively and overwhelm hostile personnel at close range.
+`
+
+},
+
+
+
+
+/*
+===========================================================
+KNOWN HOSTILES - ANCHOR
+===========================================================
+*/
+
+
+"heavy-mech": {
+
+title: "Heavy/Mech",
+
+category: "Known Hostiles",
+
+subcategory: "Anchor",
+
+clearance: 0,
+
+content:
+`
+A large autonomous combat system built around heavy armor, high-output weapons, and enough physical strength to operate as a mobile breach unit.
+`
+
+},
+
+
+
+"turret": {
+
+title: "Turret",
+
+category: "Known Hostiles",
+
+subcategory: "Anchor",
+
+clearance: 0,
+
+content:
+`
+A heavy weapon platform installed inside reinforced walls, floors, and ceilings. When activated, the weapon assembly extends from its housing and tracks hostiles with a high-powered cannon.
+`
+
+},
+
+
+
+
+/*
+===========================================================
+KNOWN HOSTILES - INFANTRY
+===========================================================
+*/
+
+
+"greystock-merc": {
+
+title: "Greystock Guardians - Mercenary",
+
+category: "Known Hostiles",
+
+subcategory: "Infantry",
+
+clearance: 0,
+
+content:
+`
+The highest commonly deployed tier of Greystock Guardians security personnel. Mercenaries are experienced, independently capable combatants equipped for situations beyond the scope of normal corporate security, and many possess qualifications comparable to dedicated military personnel.
+`
+
+},
+
+
+
+"greystock-sec": {
+
+title: "Greystock Guardians - Vigilants",
+
+category: "Known Hostiles",
+
+subcategory: "Infantry",
+
+clearance: 0,
+
+content:
+`
+The standard operational tier of Greystock Guardians security personnel. Vigilants are well-trained, disciplined, and highly competent within established procedures, but are deliberately selected and conditioned for consistency rather than initiative.
+`
+
+},
+
+
+
+"greystock-lowsec": {
+
+title: "Greystock Guardians - LowSec",
+
+category: "Known Hostiles",
+
+subcategory: "Infantry",
+
+clearance: 0,
+
+content:
+`
+The lowest operational tier of Greystock Guardians deployable security personnel. LowSec units receive minimal training and inexpensive equipment, and are primarily used where maintaining a visible security presence is more important than the survival of individual personnel.
 `
 
 },
@@ -976,6 +1484,25 @@ clearance: 0,
 content:
 `
 Lattimer Holdings is one of the oldest continuous megacorporations, known for its vast reserves of raw materials, manufactured goods, trade contracts, and liquid credit. Its public image is conservative, transactional, and old-fashioned: a company that solves problems through ownership, leverage, logistics, and money.
+`
+
+},
+
+
+
+"greystock": {
+
+title: "Greystock Guardians",
+
+category: "Factions",
+
+subcategory: "Corporate Factions",
+
+clearance: 0,
+
+content:
+`
+Greystock is a massive security firm, and provides security services and contractors to the majority of corporations. In general, they are outfitted, armed, and equipped in the same way, so Greystock Guardians on one assignment will look the same as any other.
 `
 
 },
