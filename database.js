@@ -2114,7 +2114,7 @@ ERR_SEGMENT//7D — text unrecoverable —
 
 09:41 [LINDQVIST] it was settled in the cafeteria's favour. they ran out of eel-bars
 
-09:44 [HELIOS] Reminder: break duration is limited. For your convenience: ▓▓▓ [▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒Work] ▓▓▓ — end of leak — end of l#ak — Please return to your desks.
+09:44 [HELIOS] Reminder: break duration is limited. For your convenience: ▓▓▓ [▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒Work] ▓▓▓ — Please return to your desks.
 
 09:44 [DOYLE] ok that one was rude
 
