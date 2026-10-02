@@ -5,7 +5,7 @@ blackjack.js
 
 Hidden minigame: "TWENTY-ONE" (BSLSK Leisure Systems).
 
-Unlocked by typing DefinitlyOfficeWork while logged in. The
+Unlocked by typing DefinitelyOfficeWork while logged in. The
 command is deliberately NOT in 'help' for regular accounts
 (it only appears in the admin command list, like the other
 puzzle commands). Its three pieces are leaked by Helios inside
@@ -30,7 +30,8 @@ FLOW:
              terminal, so the player can keep browsing
   PLAYER  -> hand in progress (hit / stand / quit)
   DEALER  -> dealer is drawing (input locked briefly)
-  BETWEEN -> hand finished (newgame / bet <n> / quit)
+  BETWEEN -> hand finished; the next hand deals itself shortly
+             (quit still works during the pause)
   OVER    -> out of chips (newgame / quit)
 
 SCORING (all of it lives in memory only - a page reload wipes
@@ -46,7 +47,10 @@ TABLE RULES:
   - Dealer hits on 16 or less, stands on every 17 (soft too)
   - Dealer peeks for blackjack on an Ace or ten-value upcard
   - Blackjack pays 3:2 (rounded down), push returns the wager
+  - Hands keep dealing automatically until you quit or bust out
+  - Fixed wager of 5 chips per hand (no betting command)
   - Player automatically stands on 21
+  - Text / command input only (no mouse or touch buttons)
   - No split / double / insurance (kept simple on purpose)
 
 TWEAKING: all the numbers worth changing are in the CONFIG
@@ -63,10 +67,11 @@ block right below.
    CONFIG
    =========================================================== */
 
-const OPEN_COMMAND   = "definitlyofficework";   // lowercase - input is lowercased before comparing
+const OPEN_COMMAND   = "definitelyofficework";   // lowercase - input is lowercased before comparing
 
 const STARTING_CHIPS = 50;
-const DEFAULT_BET    = 5;
+const DEFAULT_BET    = 5;      // fixed wager on every hand
+const AUTO_DEAL_MS   = 2200;   // pause on a result before the next hand deals itself
 
 const DECKS          = 6;
 const CUT_FRACTION   = 0.25;     // reshuffle when this much of the shoe is left
@@ -208,7 +213,6 @@ let hand = null;          // current hand (cards, result...)
 // Session-wide best. Lives only in memory -> resets on page reload.
 let best = { score:0, won:0, lost:0, blackjacks:0, hands:0 };
 
-let liveActions = null;   // the one actions row that's currently clickable
 let currentRefs = null;   // refs of the most recent table panel
 
 
@@ -217,7 +221,7 @@ function newRun(){
     return {
 
         chips: STARTING_CHIPS,
-        bet: DEFAULT_BET,
+        bet: DEFAULT_BET,       // wager on the current / last hand
 
         score: 0,
 
@@ -332,6 +336,23 @@ function scrollFeed(){
 }
 
 
+// Skips all dealer/animation delays once the player quits, so the hand
+// resolves (and is scored) immediately from the cards already dealt.
+let rush = false;
+
+// Bumped whenever a hand is dealt or the game resets, so a stale
+// auto-deal timer can never deal an extra hand.
+let dealToken = 0;
+
+let quitting = false;
+
+function pause(ms){
+
+    return rush ? Promise.resolve() : sleep(ms);
+
+}
+
+
 function sfx(name){
 
     if(typeof playSound === "function") playSound(name);
@@ -351,21 +372,6 @@ function warn(text){
     sfx("error");
 
     return printLine(text, "warning");
-
-}
-
-
-// Marks the previous clickable row as spent and registers a new
-// one, so old panels in the scrollback can't be clicked.
-function registerActions(el){
-
-    if(liveActions && liveActions !== el){
-
-        liveActions.classList.add("spent");
-
-    }
-
-    liveActions = el;
 
 }
 
@@ -679,7 +685,7 @@ function renderHUD(){
     };
 
     hudEl.chips.textContent = now.chips;
-    hudEl.bet.textContent   = now.bet;
+    hudEl.bet.textContent = now.bet;
     hudEl.score.textContent = now.score;
     hudEl.high.textContent  = now.high;
 
@@ -707,61 +713,6 @@ function renderHUD(){
 /* ===========================================================
    PANELS
    =========================================================== */
-
-function setActions(container, list){
-
-    const key = list.map(b=>b.cmd).join("|");
-
-    if(container.dataset.sig === key) return;
-
-    container.dataset.sig = key;
-
-    container.innerHTML = "";
-
-    list.forEach(b=>{
-
-        const btn = document.createElement("button");
-
-        btn.type = "button";
-
-        btn.className = "bj-btn" + (b.alt ? " alt" : "");
-
-        btn.textContent = b.label;
-
-        // Keep focus in the command input so the phone keyboard
-        // doesn't collapse every time a button is tapped.
-        btn.addEventListener("mousedown", e=>e.preventDefault());
-
-        btn.addEventListener("click", ()=>{
-
-            if(container.classList.contains("spent")) return;
-
-            if(busy) return;
-
-            submit(b.cmd);
-
-        });
-
-        container.appendChild(btn);
-
-    });
-
-}
-
-
-// Echoes the command like it was typed, then runs it.
-async function submit(cmd){
-
-    if(typeof registerActivity === "function") registerActivity();
-
-    await printLine(`${currentUser}@DATABASE:> ${cmd}`, "system");
-
-    if(!handleInput(cmd)) execute(cmd);
-
-    input.focus();
-
-}
-
 
 const TABLE_HTML = `
 
@@ -793,9 +744,9 @@ const TABLE_HTML = `
             <span class="bj-delta" data-r="delta"></span>
         </div>
 
-        <div class="bj-actions" data-r="actions"></div>
-
         <div class="bj-foot" data-r="foot"></div>
+
+        <div class="bj-keys" data-r="keys"></div>
 
     </div>
 
@@ -819,32 +770,15 @@ function totalLabel(cards, hideHole){
 }
 
 
-function actionsForState(){
+function keysFor(){
 
-    if(state === "PLAYER"){
+    const k = (key, label)=>`<b>${key}</b> ${label}`;
 
-        return [
+    if(state === "PLAYER") return [k("h","hit"), k("s","stand"), k("q","quit")].join("  ·  ");
 
-            { label:"HIT",   cmd:"hit" },
-            { label:"STAND", cmd:"stand" },
-            { label:"QUIT",  cmd:"quit", alt:true }
+    if(state === "OVER") return [k("n","new game"), k("q","quit")].join("  ·  ");
 
-        ];
-
-    }
-
-    if(state === "BETWEEN" || state === "OVER"){
-
-        return [
-
-            { label:"NEW GAME", cmd:"newgame" },
-            { label:"QUIT",     cmd:"quit", alt:true }
-
-        ];
-
-    }
-
-    return [];
+    return k("q","quit");
 
 }
 
@@ -882,9 +816,9 @@ function paintTable(refs){
 
     refs.delta.textContent = r ? fmtDelta(r.net) : "";
 
-    setActions(refs.actions, actionsForState());
+    refs.keys.innerHTML = keysFor();
 
-    if(state === "BETWEEN"){
+    if(state === "BETWEEN" || state === "OVER"){
 
         const rr = hand.result;
 
@@ -895,8 +829,10 @@ function paintTable(refs){
         if(rr.kind === "lose") bits.push(`loss −${SCORE_LOSS}`);
 
         refs.foot.innerHTML =
-            `<b>SCORE ${fmtDelta(rr.pts)}</b> (${bits.join(" · ")})<br>` +
-            `Next wager: <b>${run.bet}</b>. Type <em>bet &lt;amount&gt;</em> to change it.`;
+            `<b>SCORE ${fmtDelta(rr.pts)}</b> (${bits.join(" · ")})` +
+            (state === "BETWEEN"
+                ? `<br>Dealing next hand  ·  wager <b>${DEFAULT_BET}</b>`
+                : ``);
 
     }
 
@@ -912,7 +848,27 @@ function paintTable(refs){
 }
 
 
-async function showTable(){
+// fresh=false repaints the live table in place (hit / stand / dealer
+// draws); fresh=true prints a new panel (start of every hand, or after
+// the screen was cleared).
+async function showTable(fresh){
+
+    if(!fresh && currentRefs && currentRefs.root.isConnected){
+
+        paintTable(currentRefs);
+
+        return currentRefs;
+
+    }
+
+    if(currentRefs && currentRefs.keys){
+
+        currentRefs.keys.innerHTML = "";
+
+        // the previous hand's "dealing next hand" note no longer applies
+        currentRefs.foot.innerHTML = currentRefs.foot.innerHTML.split("<br>")[0];
+
+    }
 
     const root = html(TABLE_HTML);
 
@@ -921,8 +877,6 @@ async function showTable(){
     await printNode(root);
 
     currentRefs = refs;
-
-    registerActions(refs.actions);
 
     paintTable(refs);
 
@@ -967,6 +921,29 @@ function statsHTML(r){
 }
 
 
+const TITLE_ART = [
+    " ████   ██ ",
+    "█    █ ███ ",
+    "   ██   ██ ",
+    " ██     ██ ",
+    "██████ ████"
+];
+
+function titleArtHTML(){
+
+    const g = makeGrid(30, CARD_H);
+
+    TITLE_ART.forEach((row, y)=> put(g, 0, y, row, "t"));
+
+    drawCard(g, 16, { r:"A", s:"♠" });
+
+    drawCard(g, 21, { r:"K", s:"♥" });
+
+    return gridToHTML(g);
+
+}
+
+
 async function showMenu(){
 
     const root = html(`
@@ -975,33 +952,30 @@ async function showMenu(){
 
         <div class="bj-head">
             <span class="bj-title">BSLSK LEISURE SYSTEMS</span>
-            <span class="bj-tag">EMPLOYEE ENGAGEMENT SUITE // MOD-21</span>
+            <span class="bj-tag">MOD-21</span>
         </div>
 
         <div class="bj-body">
 
+            <div class="bj-hero"><pre class="bj-pre" data-r="art"></pre></div>
+
             <div class="bj-big">TWENTY-ONE</div>
 
-            <div class="bj-sub">WORKPLACE WELLNESS MODULE &nbsp;·&nbsp; BUILD 1.0.3 (LEGACY)</div>
+            <div class="bj-sub">EMPLOYEE WELLNESS MODULE &nbsp;·&nbsp; BUILD 1.0.3 (LEGACY)</div>
 
             <p class="bj-copy">
                 Short, structured breaks are associated with improved associate morale.
-                This module is provided at no cost to eligible personnel and has been
-                approved for off-hours use by Compliance.
+                Provided at no cost to eligible personnel and approved for off-hours use.
             </p>
 
-            <div class="bj-actions" data-r="actions"></div>
-
-            <div class="bj-foot">
-                Type <em>start game</em> to begin, or <em>commands</em> for rules and controls.
-                Anything else and the terminal carries on as normal.
+            <div class="bj-keys">
+                <b>start game</b>  ·  <b>commands</b>  ·  <b>quit</b>
             </div>
 
             <div class="bj-fine">
                 Usage may be logged. Chips hold no monetary value. Management accepts no
                 responsibility for lost chips, lost hours, or lost operatives.
-                This module is scheduled for decommission (ticket #4471, status: AWAITING
-                REVIEW since [REDACTED]).
+                Scheduled for decommission (ticket #4471, status: AWAITING REVIEW since [REDACTED]).
             </div>
 
         </div>
@@ -1012,16 +986,9 @@ async function showMenu(){
 
     const refs = refsOf(root);
 
-    setActions(refs.actions, [
-
-        { label:"START GAME", cmd:"start game" },
-        { label:"COMMANDS",   cmd:"commands", alt:true }
-
-    ]);
+    refs.art.innerHTML = titleArtHTML();
 
     await printNode(root);
-
-    registerActions(refs.actions);
 
     scrollFeed();
 
@@ -1049,8 +1016,7 @@ async function showCommands(withStart){
 
             ${cmd("hit",        "take another card")}
             ${cmd("stand",      "keep your hand, dealer plays")}
-            ${cmd("newgame",    "deal the next hand (or restart after game over)")}
-            ${cmd("bet &lt;n&gt;",   "set your wager between hands (or  bet max)")}
+            ${cmd("newgame",    "restart after a game over")}
             ${cmd("quit",       "leave the table and return to the terminal")}
 
             <div class="bj-section">HOW TO PLAY</div>
@@ -1072,12 +1038,15 @@ async function showCommands(withStart){
             ${cmd("DEALER",    "must hit on 16 or less, stands on every 17")}
             ${cmd("PUSH",      "same total as the dealer. Your wager is returned")}
             ${cmd("21",        "you stand automatically")}
+            ${cmd("HANDS",     "new hands deal automatically until you quit or run out of chips")}
+            ${cmd("WAGER",     "fixed at ${DEFAULT_BET} chips a hand")}
+            ${cmd("QUIT",      "free between hands. Quitting mid-hand forfeits it as a loss")}
             ${cmd("LIMITS",    "no split, double down, or insurance at this table")}
 
             <div class="bj-section">SCORING</div>
 
             <p class="bj-copy">
-                You start with ${STARTING_CHIPS} chips and a score of 0. Score is separate from
+                You start with ${STARTING_CHIPS} chips, a fixed wager of ${DEFAULT_BET} per hand, and a score of 0. Score is separate from
                 chips and never changes your balance. Every card you play scores its value
                 (2-10, face cards 10, Ace 11). A win adds the chips won, a blackjack adds
                 ${SCORE_BLACKJACK}, and a loss costs ${SCORE_LOSS}. Hands won, lost, blackjacks and busts
@@ -1085,29 +1054,13 @@ async function showCommands(withStart){
                 kept until the terminal is reloaded.
             </p>
 
-            ${withStart ? `<div class="bj-actions" data-r="actions"></div>` : ``}
-
         </div>
 
     </div>
 
     `);
 
-    const refs = refsOf(root);
-
-    if(withStart && refs.actions){
-
-        setActions(refs.actions, [
-
-            { label:"START GAME", cmd:"start game" }
-
-        ]);
-
-    }
-
     await printNode(root);
-
-    if(withStart && refs.actions) registerActions(refs.actions);
 
     scrollFeed();
 
@@ -1181,10 +1134,8 @@ async function showGameOver(){
 
             <div data-r="stats"></div>
 
-            <div class="bj-actions" data-r="actions"></div>
-
-            <div class="bj-foot">
-                Type <em>newgame</em> for a fresh ${STARTING_CHIPS} chips (score resets, high score stays), or <em>quit</em>.
+            <div class="bj-keys">
+                <b>n</b> new game (fresh ${STARTING_CHIPS} chips, high score stays)  ·  <b>q</b> quit
             </div>
 
         </div>
@@ -1206,11 +1157,7 @@ async function showGameOver(){
 
     refs.fhigh.textContent = Math.max(best.score, run.score);
 
-    setActions(refs.actions, actionsForState());
-
     await printNode(root);
-
-    registerActions(refs.actions);
 
     scrollFeed();
 
@@ -1250,7 +1197,7 @@ async function startRun(){
 
         renderHUD();
 
-        await say(`// TABLE OPEN  ·  ${DECKS}-DECK SHOE  ·  DEALER STANDS ON ${DEALER_STANDS}  ·  ${STARTING_CHIPS} CHIPS ISSUED`);
+        await say(`// TABLE OPEN  ·  ${DECKS}-DECK SHOE  ·  DEALER STANDS ON ${DEALER_STANDS}  ·  ${STARTING_CHIPS} CHIPS ISSUED  ·  WAGER ${DEFAULT_BET}`);
 
         if(e !== epoch) return;
 
@@ -1271,6 +1218,8 @@ async function dealHand(){
 
     busy = true;
 
+    dealToken++;
+
     const e = epoch;
 
     try{
@@ -1285,15 +1234,20 @@ async function dealHand(){
 
         }
 
-        if(run.bet > run.chips){
+        // Fixed wager (or whatever chips are left if under 5).
+        let wager = DEFAULT_BET;
 
-            run.bet = run.chips;
+        if(wager > run.chips){
 
-            await say(`// WAGER ADJUSTED TO ${run.bet} (REMAINING CHIPS)`, "warning");
+            wager = run.chips;
+
+            await say(`// WAGER ADJUSTED TO ${wager} (REMAINING CHIPS)`, "warning");
 
             if(e !== epoch) return;
 
         }
+
+        run.bet = wager;
 
         run.chips -= run.bet;
 
@@ -1320,7 +1274,7 @@ async function dealHand(){
 
         renderHUD();
 
-        const refs = await showTable();
+        const refs = await showTable(true);
 
         if(e !== epoch) return;
 
@@ -1337,7 +1291,7 @@ async function dealHand(){
 
             paintTable(refs);
 
-            await sleep(DEALER_DELAY + 250);
+            await pause(DEALER_DELAY + 250);
 
             if(e !== epoch) return;
 
@@ -1424,15 +1378,9 @@ function settle(){
 }
 
 
-async function finishHand(refs){
-
-    const e = epoch;
-
-    hand.holeHidden = false;
-
-    const r = settle();
-
-    hand.result = r;
+// Applies a finished hand to chips, stats and score. Used for normal
+// results and for a forfeit (quitting mid-hand counts as a loss).
+function applyResult(r){
 
     run.chips += r.payout;
 
@@ -1469,6 +1417,7 @@ async function finishHand(refs){
     //   + chips won on a winning hand
     //   + 21 for a blackjack
     //   - 5 for a loss
+    // The running score never drops below 0.
     const cardPts = hand.player.reduce((n, c)=> n + cardValue(c), 0);
 
     let pts = cardPts;
@@ -1479,10 +1428,27 @@ async function finishHand(refs){
 
     run.cards += hand.player.length;
 
-    run.score += pts;
+    const before = run.score;
 
-    r.pts = pts;
+    run.score = Math.max(0, before + pts);
+
+    r.pts = run.score - before;
     r.cardPts = cardPts;
+
+}
+
+
+async function finishHand(refs){
+
+    const e = epoch;
+
+    hand.holeHidden = false;
+
+    const r = settle();
+
+    hand.result = r;
+
+    applyResult(r);
 
     const broke = run.chips <= 0;
 
@@ -1502,7 +1468,7 @@ async function finishHand(refs){
 
     if(broke){
 
-        await sleep(1100);
+        await pause(1100);
 
         if(e !== epoch) return;
 
@@ -1510,7 +1476,32 @@ async function finishHand(refs){
 
         await showGameOver();
 
+        return;
+
     }
+
+    autoDeal();
+
+}
+
+
+// After a result the game carries on by itself: short pause to read
+// the outcome, then the next hand is dealt. Not awaited by callers, so
+// quit stays responsive during the pause. Quitting, logging out
+// or any other deal cancels it via dealToken.
+async function autoDeal(){
+
+    if(rush || quitting) return;
+
+    const tok = ++dealToken;
+
+    const e = epoch;
+
+    await sleep(AUTO_DEAL_MS);
+
+    if(e !== epoch || tok !== dealToken || quitting || state !== "BETWEEN") return;
+
+    await dealHand();
 
 }
 
@@ -1537,7 +1528,7 @@ async function doHit(){
 
             if(e !== epoch) return;
 
-            await sleep(600);
+            await pause(600);
 
             if(e !== epoch) return;
 
@@ -1557,7 +1548,7 @@ async function doHit(){
 
             if(e !== epoch) return;
 
-            await sleep(DEALER_DELAY);
+            await pause(DEALER_DELAY);
 
             if(e !== epoch) return;
 
@@ -1598,7 +1589,7 @@ async function doStand(){
 
         if(e !== epoch) return;
 
-        await sleep(DEALER_DELAY);
+        await pause(DEALER_DELAY);
 
         if(e !== epoch) return;
 
@@ -1627,7 +1618,7 @@ async function dealerPlay(refs){
 
     paintTable(refs);
 
-    await sleep(DEALER_DELAY);
+    await pause(DEALER_DELAY);
 
     if(e !== epoch) return;
 
@@ -1637,7 +1628,7 @@ async function dealerPlay(refs){
 
         paintTable(refs);
 
-        await sleep(DEALER_DELAY);
+        await pause(DEALER_DELAY);
 
         if(e !== epoch) return;
 
@@ -1645,7 +1636,7 @@ async function dealerPlay(refs){
 
         paintTable(refs);
 
-        await sleep(DEALER_DELAY);
+        await pause(DEALER_DELAY);
 
         if(e !== epoch) return;
 
@@ -1659,7 +1650,7 @@ async function dealerPlay(refs){
 
         paintTable(refs);
 
-        await sleep(DEALER_DELAY - 250);
+        await pause(DEALER_DELAY - 250);
 
         if(e !== epoch) return;
 
@@ -1715,19 +1706,42 @@ async function doNewGame(){
 
 async function doQuit(){
 
-    busy = true;
+    if(quitting) return;
+
+    quitting = true;
 
     const e = epoch;
 
-    try{
+    // If the dealer is mid-turn, skip the delays so the hand finishes
+    // (and is scored normally) from the cards already dealt.
+    rush = true;
 
-        const forfeited = (state === "PLAYER") ? hand.wager : 0;
+    while(busy && e === epoch) await sleep(20);
+
+    if(e !== epoch){ quitting = false; return; }
+
+    busy = true;
+
+    try{
 
         const lines = [];
 
-        if(forfeited){
+        if(state === "PLAYER"){
 
-            lines.push(`Hand in progress. Your wager of ${forfeited} chips has been forfeited.`);
+            // Walking away mid-hand = forfeit, scored as a loss.
+            const w = hand.wager;
+
+            const r = { kind:"lose", net:-w, payout:0, text:"FORFEIT" };
+
+            hand.result = r;
+
+            hand.holeHidden = false;
+
+            applyResult(r);
+
+            if(run.chips <= 0) recordRun();
+
+            lines.push(`Hand in progress. Your wager of ${w} chips has been forfeited and counted as a loss.`);
 
         }
 
@@ -1741,8 +1755,6 @@ async function doQuit(){
 
         const wasRecord = await showReport("BREAK ENDED", "SESSION SUMMARY", lines);
 
-        if(e !== epoch) return;
-
         resetGameState();
 
         renderHUD();
@@ -1752,6 +1764,8 @@ async function doQuit(){
     }
 
     finally{
+
+        quitting = false;
 
         if(e === epoch) busy = false;
 
@@ -1770,9 +1784,9 @@ function resetGameState(){
 
     currentRefs = null;
 
-    if(liveActions) liveActions.classList.add("spent");
+    rush = false;
 
-    liveActions = null;
+    dealToken++;
 
 }
 
@@ -1787,51 +1801,6 @@ function reset(){
     resetGameState();
 
     renderHUD();
-
-}
-
-
-function doBet(arg){
-
-    if(state !== "BETWEEN"){
-
-        if(state === "OVER") return warn("SESSION OVER // TYPE newgame TO RESTART");
-
-        return warn("HAND IN PROGRESS // WAGERS CAN ONLY CHANGE BETWEEN HANDS");
-
-    }
-
-    let n;
-
-    if(arg === "max" || arg === "all"){
-
-        n = run.chips;
-
-    }
-
-    else if(/^\d+$/.test(arg || "")){
-
-        n = parseInt(arg, 10);
-
-    }
-
-    else{
-
-        return warn(`USAGE: bet <1-${run.chips}>  (or  bet max)`);
-
-    }
-
-    if(n < 1) return warn("MINIMUM WAGER IS 1 CHIP");
-
-    if(n > run.chips) return warn(`INSUFFICIENT CHIPS // MAXIMUM WAGER IS ${run.chips}`);
-
-    run.bet = n;
-
-    renderHUD();
-
-    sfx("success");
-
-    return say(`// NEXT WAGER SET TO ${n} CHIP${n === 1 ? "" : "S"}${n === run.chips ? "  ·  ALL IN" : ""}`, "success");
 
 }
 
@@ -1906,10 +1875,6 @@ function handleInput(text){
 
             state = "IDLE";
 
-            if(liveActions) liveActions.classList.add("spent");
-
-            liveActions = null;
-
             say("// MODULE CLOSED");
 
             return true;
@@ -1922,6 +1887,15 @@ function handleInput(text){
 
 
     /* ----- in a run: the game owns the prompt ----- */
+
+    // Quitting is always allowed, even mid dealer-turn.
+    if(cmd === "quit" || cmd === "q" || cmd === "exit" || cmd === "leave"){
+
+        doQuit();
+
+        return true;
+
+    }
 
     if(busy){
 
@@ -1967,22 +1941,6 @@ function handleInput(text){
 
     }
 
-    if(cmd === "quit" || cmd === "q" || cmd === "exit" || cmd === "leave"){
-
-        doQuit();
-
-        return true;
-
-    }
-
-    if(word === "bet" || word === "b"){
-
-        doBet(parts[1]);
-
-        return true;
-
-    }
-
     if(cmd === "commands" || cmd === "rules" || cmd === "help" || cmd === "?"){
 
         showCommands(false);
@@ -1995,9 +1953,7 @@ function handleInput(text){
 
         feed.innerHTML = "";
 
-        liveActions = null;
-
-        if(state === "PLAYER" || state === "BETWEEN") showTable();
+        if(state === "PLAYER" || state === "BETWEEN") showTable(true);
 
         else if(state === "OVER") showGameOver();
 
@@ -2013,7 +1969,9 @@ function handleInput(text){
 
     }
 
-    warn("UNRECOGNISED INPUT // hit · stand · quit · newgame · bet <n> · commands");
+    // Anything else is a normal terminal command, which is locked
+    // while a game is running.
+    warn("TABLE ACTIVE // TYPE  quit  TO LEAVE THE GAME AND BROWSE THE DATABASE");
 
     return true;
 
@@ -2042,5 +2000,8 @@ function noHand(){
 window.blackjackIntercept = handleInput;
 
 window.blackjackReset = reset;
+
+// True while a run is open (so the idle screensaver stays out of the way).
+window.blackjackActive = ()=> run !== null;
 
 })();
