@@ -2019,11 +2019,17 @@ async function readEntry(name){
 
 
 
-    // 2. Title match(es) - case-sensitive, same "precision" rule
-    // the site has always used for direct lookups.
+    // 2. Title match(es) - case-insensitive, same as every other
+    // lookup in this function (category, subcategory, and the
+    // qualifier compound below). A case-sensitive title match was
+    // the actual root cause of entries like "Other Offices"
+    // appearing unreadable: typing the natural lowercase form
+    // skipped this step entirely (0 matches, no qualifier given)
+    // and fell all the way through to a dead-end "FILE NOT FOUND"
+    // instead of ever reaching the "MULTIPLE ENTRIES FOUND" hint.
     let titleKeys = Object.keys(database).filter(k=>
 
-        database[k].title === name
+        database[k].title.toLowerCase() === name.toLowerCase()
         &&
         hasAccessTo(database[k])
 
