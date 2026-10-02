@@ -419,7 +419,7 @@ content:
 `
 Division 7 is the "Commutable Personnel" division, the majority of which is composed of massive populations of more-or-less slave labor, shuttled in and out of cryogenic sleep at the whim of the corporation. There are few endeavors which can't be handled with more skill and for less cost by using robotics, and those few require incredible amounts of disposable manpower to be profitable.
 
-Division 7 is one of the least glamorous divisions that someone in a managerial or administrative role could find themselves in. Being one of the workers themselves is arguably one of the most miserable existences within the BSLSK corporate structure (with the possible exception of the experimental subjects in [REDACTED].
+Division 7 is one of the least glamorous divisions that someone in a managerial or administrative role could find themselves in. Being one of the workers themselves is arguably one of the most miserable existences within the BSLSK corporate structure (with the possible exception of the experimental subjects in [REDACTED]).
 `
 
 },
