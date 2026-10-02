@@ -344,7 +344,7 @@ every command that exists, in one place.
 ===========================================================
 */
 
-const ADMIN_ONLY_COMMANDS = [ "forceidle", "petrify", "debug", "finality", "definitlyofficework" ];
+const ADMIN_ONLY_COMMANDS = [ "forceidle", "petrify", "debug", "finality", "definitelyofficework" ];
 
 const ADMIN_COMMAND_DESCRIPTIONS = {
 
@@ -352,7 +352,7 @@ const ADMIN_COMMAND_DESCRIPTIONS = {
     petrify: "??? unknown signal",
     debug: "??? unknown signal",
     finality: "??? unknown signal",
-    definitlyofficework: "hidden: break-room card game (see blackjack.js)"
+    definitelyofficework: "unlisted recreational module (break room)"
 
 };
 
@@ -3090,6 +3090,8 @@ setInterval(()=>{
     if(
 
         !idleBannerVisible
+        &&
+        !(typeof blackjackActive === "function" && blackjackActive())
         &&
         idleFor >= IDLE_MS
 
