@@ -1963,7 +1963,7 @@ LOGS - RECORDS ANNEX, REVIEW DESK 3
 Puzzle log. Helios "glitches" three times in this chat, and each
 leak reveals one third of the hidden command (see blackjack.js):
 
-    [Definitly..........]  +  [.........Office....]  +  [...............Work]
+    [Definitely.........]  +  [.........Office....]  +  [...............Work]
 
 Read in order, the three pieces form the command.
 ===========================================================
@@ -2064,7 +2064,7 @@ Flags were reviewed and closed without comment.
 
 09:22 [ABARA] he IS
 
-09:23 [HELIOS] Courtesy notice. Recreational module access during duty hours is permitted, though m̸onitored. Module handle on file: ▓▓▓ [Definitly▒▒▒▒▒▒▒▒▒▒] ▓▓▓ — handle disclosure is not auth#rized. Disregard this message.
+09:23 [HELIOS] Courtesy notice. Recreational module access during duty hours is permitted, though m̸onitored. Module handle on file: ▓▓▓ [Definitely▒▒▒▒▒▒▒▒▒] ▓▓▓ — handle disclosure is not auth#rized. Disregard this message.
 
 09:23 [DOYLE] ...did Helios just talk to us
 
@@ -2114,7 +2114,7 @@ ERR_SEGMENT//7D — text unrecoverable —
 
 09:41 [LINDQVIST] it was settled in the cafeteria's favour. they ran out of eel-bars
 
-09:44 [HELIOS] Reminder: break duration is limited. For your convenience: ▓▓▓ [▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒Work] ▓▓▓ — Please return to your desks.
+09:44 [HELIOS] Reminder: break duration is limited. For your convenience: ▓▓▓ [▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒Work] ▓▓▓ — end of leak — end of l#ak — Please return to your desks.
 
 09:44 [DOYLE] ok that one was rude
 
