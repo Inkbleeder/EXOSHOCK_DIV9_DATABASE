@@ -2069,7 +2069,7 @@ async function readEntry(name){
         });
 
         printLine(
-        `Type 'read <category> ${name}' to specify.`
+        `Type 'read <category/subcategory> ${name}' to specify - see location(s) above.`
         );
 
         return;
@@ -2080,37 +2080,38 @@ async function readEntry(name){
 
     // 3. "<category or subcategory> <title>" compound - resolves
     // the ambiguity from step 2 by qualifying which one you mean.
-    let spaceIndex = name.indexOf(" ");
+    //
+    // Built directly from the data (every entry's own category/
+    // subcategory + title) rather than naively splitting the input
+    // on its first space - category and subcategory names can be
+    // multiple words themselves (e.g. "Division 7", "Standard
+    // Issue"), which a first-space split can never match. This is
+    // also the only thing that can actually disambiguate two
+    // entries that share the same category and only differ by
+    // subcategory (e.g. two "Other Offices" entries both filed
+    // under BSLSK) - qualifying by category alone can't tell them
+    // apart, qualifying by subcategory can.
+    let lowerName = name.toLowerCase();
 
-    if(spaceIndex > -1){
+    let qualifiedKey = Object.keys(database).find(k=>{
 
-        let qualifier = name.slice(0, spaceIndex);
+        let e = database[k];
 
-        let rest = name.slice(spaceIndex + 1);
+        let byCategory = (e.category + " " + e.title).toLowerCase();
 
-        let qualifiedKey = Object.keys(database).find(k=>{
+        let bySubcategory = e.subcategory
+            ? (e.subcategory + " " + e.title).toLowerCase()
+            : null;
 
-            let e = database[k];
+        return lowerName === byCategory || lowerName === bySubcategory;
 
-            let inCategory =
-                e.category.toLowerCase() === qualifier.toLowerCase();
+    });
 
-            let inSubcategory =
-                e.subcategory
-                &&
-                e.subcategory.toLowerCase() === qualifier.toLowerCase();
+    if(qualifiedKey && hasAccessTo(database[qualifiedKey])){
 
-            return (inCategory || inSubcategory) && e.title === rest;
+        await openEntry(database[qualifiedKey]);
 
-        });
-
-        if(qualifiedKey && hasAccessTo(database[qualifiedKey])){
-
-            await openEntry(database[qualifiedKey]);
-
-            return;
-
-        }
+        return;
 
     }
 
