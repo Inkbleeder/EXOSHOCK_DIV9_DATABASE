@@ -981,87 +981,6 @@ body.theme-basilisk{
 }
 
 
-/* ---- buttons ---- */
-
-.bj-actions{
-
-    display:flex;
-
-    flex-wrap:wrap;
-
-    gap:8px;
-
-    margin-top:12px;
-
-}
-
-.bj-actions:empty{
-
-    display:none;
-
-}
-
-.bj-btn{
-
-    font-family:inherit;
-
-    font-size:.82em;
-
-    font-weight:bold;
-
-    letter-spacing:2px;
-
-    color:var(--green);
-
-    background:transparent;
-
-    border:1px solid var(--green);
-
-    padding:8px 16px;
-
-    cursor:pointer;
-
-    text-shadow:inherit;
-
-    touch-action:manipulation;
-
-    transition:background .12s ease, color .12s ease;
-
-}
-
-.bj-btn:hover{
-
-    background:var(--green);
-
-    color:var(--bg);
-
-    text-shadow:none;
-
-}
-
-.bj-btn:active{
-
-    transform:translateY(1px);
-
-}
-
-.bj-btn.alt{
-
-    border-color:var(--border);
-
-    opacity:.8;
-
-}
-
-.bj-actions.spent{
-
-    opacity:.25;
-
-    pointer-events:none;
-
-}
-
-
 /* ---- text blocks ---- */
 
 .bj-big{
@@ -1422,14 +1341,6 @@ body.theme-basilisk{
 
     }
 
-    .bj-actions .bj-btn{
-
-        flex:1 1 auto;
-
-        padding:11px 8px;
-
-    }
-
     .bj-cmd b{
 
         flex-basis:9ch;
@@ -1526,6 +1437,95 @@ body.theme-basilisk{
         text-shadow:0 0 5px var(--green);
         animation:none;
         backface-visibility:hidden;
+    }
+
+}
+
+
+/* ---- text-only controls line + menu hero ---- */
+
+.bj-keys{
+
+    margin-top:14px;
+
+    padding-top:9px;
+
+    border-top:1px solid var(--border);
+
+    font-size:.78em;
+
+    letter-spacing:1px;
+
+    opacity:.85;
+
+}
+
+.bj-keys b{
+
+    color:var(--green);
+
+    letter-spacing:1px;
+
+}
+
+.bj-keys b::before{
+
+    content:"";
+
+}
+
+.bj-hero{
+
+    overflow:hidden;
+
+    margin:2px 0 12px;
+
+}
+
+.bj-t{
+
+    color:var(--green);
+
+    text-shadow:0 0 8px var(--green);
+
+}
+
+.bj-menu .bj-big{
+
+    font-size:1.25em;
+
+    letter-spacing:10px;
+
+    margin:0;
+
+}
+
+.bj-menu .bj-sub{
+
+    margin-bottom:12px;
+
+}
+
+.bj-menu .bj-keys{
+
+    text-align:center;
+
+}
+
+@media (max-width:700px){
+
+    .bj-menu .bj-big{
+
+        letter-spacing:6px;
+
+    }
+
+    .bj-keys{
+
+        font-size:.72em;
+
+        letter-spacing:.5px;
+
     }
 
 }
