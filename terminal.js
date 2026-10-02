@@ -2827,7 +2827,7 @@ below with any plain-text ASCII art (e.g. from an online
 ===========================================================
 */
 
-const IDLE_MS = 1 * 60 * 1000; // 1 minute
+const IDLE_MS = 5 * 60 * 1000; // 5 minutes
 
 const IDLE_BANNER_SPEED = 90; // pixels per second
 
