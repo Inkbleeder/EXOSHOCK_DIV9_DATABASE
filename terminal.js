@@ -2842,12 +2842,13 @@ const idleBannerEl   = document.getElementById("idle-banner");
 const idleBannerText = document.getElementById("idle-banner-text");
 
 const IDLE_BANNER =
-`████  █████ █     █████ █   █    ████  █████ █   █       ████  
-█   █ █     █     █     █  █     █   █   █   █   █       █   █ 
-████  █████ █     █████ ███      █   █   █   █   █ █████ ████  
-█   █     █ █         █ █  █     █   █   █   █   █           █ 
-█   █     █ █         █ █   █    █   █   █    █ █            █ 
-████  █████ █████ █████ █   █    ████  █████   █         ████  `;
+`█████        ████
+█    █      █    █
+█    █ ████  █████
+█    █           █
+█████        ████
+
+DATABASE TERMINAL`;
 
 let lastActivity = Date.now();
 let idleBannerVisible = false;
