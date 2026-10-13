@@ -2131,7 +2131,340 @@ ERR_SEGMENT//7D — text unrecoverable —
 [END OF RECOVERY]
 `
 
-}
+},
+
+
+
+/*
+===========================================================
+BSLSK - SUIT MODIFIERS (POSITIVE / NEGATIVE)
+WEAPONS - STANDARD ISSUE (Wraith P60)
+===========================================================
+*/
+
+
+"suit-good-rack": {
+
+title: "Auto-Rack",
+
+category: "BSLSK",
+
+subcategory: "Positive Suit Modifiers",
+
+clearance: 0,
+
+content:
+`
+Automates portions of weapon cycling and ammunition handling.
+`
+
+},
+
+"suit-good-signature": {
+
+title: "Scrambled Signature",
+
+category: "BSLSK",
+
+subcategory: "Positive Suit Modifiers",
+
+clearance: 0,
+
+content:
+`
+Disrupts the suit’s detectable signature, reducing the reliability of hostile targeting systems.
+`
+
+},
+
+"suit-good-armor": {
+
+title: "Hardened Armor",
+
+category: "BSLSK",
+
+subcategory: "Positive Suit Modifiers",
+
+clearance: 0,
+
+content:
+`
+Reinforces the suit’s protective systems against incoming damage.
+`
+
+},
+
+"suit-good-exprot": {
+
+title: "Explosive Protection",
+
+category: "BSLSK",
+
+subcategory: "Positive Suit Modifiers",
+
+clearance: 0,
+
+content:
+`
+Improves protection against explosive force and related damage.
+`
+
+},
+
+"suit-good-aim": {
+
+title: "Predictive Fire Control",
+
+category: "BSLSK",
+
+subcategory: "Positive Suit Modifiers",
+
+clearance: 0,
+
+content:
+`
+Provides additional targeting assistance by anticipating weapon and target movement.
+`
+
+},
+
+"suit-good-recoil": {
+
+title: "Recoil Stabilization Suite",
+
+category: "BSLSK",
+
+subcategory: "Positive Suit Modifiers",
+
+clearance: 0,
+
+content:
+`
+Improves the suit’s ability to compensate for recoil during weapon operation.
+`
+
+},
+
+"suit-good-reticle": {
+
+title: "Projected Reticle System",
+
+category: "BSLSK",
+
+subcategory: "Positive Suit Modifiers",
+
+clearance: 0,
+
+content:
+`
+Projects weapon alignment information directly into the wearer’s visual interface.
+`
+
+},
+
+"suit-good-laser": {
+
+title: "Visible Aim Laser",
+
+category: "BSLSK",
+
+subcategory: "Positive Suit Modifiers",
+
+clearance: 0,
+
+content:
+`
+Adds a weapon-aligned visible laser to assist with manual aiming.
+`
+
+},
+
+"suit-good-harness": {
+
+title: "Expanded Utility Harness",
+
+category: "BSLSK",
+
+subcategory: "Positive Suit Modifiers",
+
+clearance: 0,
+
+content:
+`
+Expands the suit’s capacity for carrying and accessing field equipment.
+`
+
+},
+
+"suit-good-recovery": {
+
+title: "Critical Recovery",
+
+category: "BSLSK",
+
+subcategory: "Positive Suit Modifiers",
+
+clearance: 0,
+
+content:
+`
+Improves the suit’s ability to assist the wearer following severe injury or system trauma.
+`
+
+},
+
+"suit-bad-fire": {
+
+title: "Faulty Fire Control",
+
+category: "BSLSK",
+
+subcategory: "Negative Suit Modifiers",
+
+clearance: 0,
+
+content:
+`
+Reduces the reliability of the suit’s targeting and weapon-assistance systems.
+`
+
+},
+
+"suit-bad-armor": {
+
+title: "Optimized Armor",
+
+category: "BSLSK",
+
+subcategory: "Negative Suit Modifiers",
+
+clearance: 0,
+
+content:
+`
+Reduces protective material and reinforcement in the interest of improved resource efficiency.
+`
+
+},
+
+"suit-bad-signature": {
+
+title: "Compromised Signature",
+
+category: "BSLSK",
+
+subcategory: "Negative Suit Modifiers",
+
+clearance: 0,
+
+content:
+`
+Increases the reliability with which hostile targeting systems can identify and track the suit.
+`
+
+},
+
+"suit-bad-trauma": {
+
+title: "Delayed Trauma Response",
+
+category: "BSLSK",
+
+subcategory: "Negative Suit Modifiers",
+
+clearance: 0,
+
+content:
+`
+Slows the suit’s response to injury and other forms of physical trauma.
+`
+
+},
+
+"suit-bad-reload": {
+
+title: "Degraded Reload",
+
+category: "BSLSK",
+
+subcategory: "Negative Suit Modifiers",
+
+clearance: 0,
+
+content:
+`
+Impedes the suit’s assistance with weapon reloading and ammunition handling.
+`
+
+},
+
+"suit-bad-servos": {
+
+title: "Degraded Servos",
+
+category: "BSLSK",
+
+subcategory: "Negative Suit Modifiers",
+
+clearance: 0,
+
+content:
+`
+Reduces the performance of the suit’s powered movement systems.
+`
+
+},
+
+"suit-bad-recoil": {
+
+title: "Destabilized Recoil Dampers",
+
+category: "BSLSK",
+
+subcategory: "Negative Suit Modifiers",
+
+clearance: 0,
+
+content:
+`
+Reduces the suit’s ability to compensate for weapon recoil.
+`
+
+},
+
+"suit-bad-ballistics": {
+
+title: "Detuned Ballistics",
+
+category: "BSLSK",
+
+subcategory: "Negative Suit Modifiers",
+
+clearance: 0,
+
+content:
+`
+Reduces the effectiveness of the suit’s ballistic weapon integration.
+`
+
+},
+
+"wraith p60 hybrid automatic": {
+
+title: "Wraith P60 Hybrid Automatic",
+
+category: "Weapons",
+
+subcategory: "Standard Issue",
+
+clearance: 0,
+
+content:
+`
+A compact, high-rate weapon, the Wraith P60 sprays fire at a blistering pace, perfect when you need to deliver a torrent of raw output into the heart of a chaotic firefight.
+`
+
+},
 
 
 
