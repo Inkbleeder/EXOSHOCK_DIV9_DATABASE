@@ -1104,6 +1104,14 @@ function autoComplete(el){
 
     }
 
+    else if(!isLoggedIn){
+
+        // Arguments are only completed once logged in - otherwise Tab
+        // would leak entry titles to someone who can't read anything.
+        return;
+
+    }
+
     else if(firstWord === "read"){
 
         // Mode 2: "read subcategory <name>" completes against
@@ -1147,8 +1155,6 @@ function autoComplete(el){
     if(candidates.length === 0) return;
 
 
-    tabBase = query;
-
     tabMatches = candidates;
 
     tabIndex = 0;
@@ -1156,6 +1162,13 @@ function autoComplete(el){
     tabPrefix = prefix;
 
     applyTabMatch(el);
+
+    // Only stay in "cycle" mode when there is something to cycle
+    // through. With a single match (e.g. "rea" -> "read "), leave
+    // tabBase null so the NEXT Tab press starts a fresh completion
+    // from the new text - that's what lets "rea<Tab><Tab>" go on to
+    // complete the argument instead of getting stuck on "read ".
+    tabBase = candidates.length > 1 ? query : null;
 
 }
 
@@ -1190,7 +1203,7 @@ function readArgumentCandidates(query){
     // so lowercase works fine for both matching and inserting.
     let categoryNames = new Set();
 
-    Object.values(database).forEach(entry=>{
+    Object.values(database).filter(hasAccessTo).forEach(entry=>{
 
         categoryNames.add(entry.category.toLowerCase());
 
@@ -1209,7 +1222,7 @@ function readArgumentCandidates(query){
     // meant to be typed by hand anymore).
     let titleNames = new Set();
 
-    Object.values(database).forEach(entry=>{
+    Object.values(database).filter(hasAccessTo).forEach(entry=>{
 
         if(entry.title){
 
@@ -1238,7 +1251,7 @@ function subcategoryCandidates(query){
 
     let subNames = new Set();
 
-    Object.values(database).forEach(entry=>{
+    Object.values(database).filter(hasAccessTo).forEach(entry=>{
 
         if(entry.subcategory){
 
