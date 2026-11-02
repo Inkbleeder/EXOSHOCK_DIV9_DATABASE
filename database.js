@@ -2468,4 +2468,87 @@ A compact, high-rate weapon, the Wraith P60 sprays fire at a blistering pace, pe
 
 
 
+/*
+===========================================================
+CONTRACT LOCATIONS - VESSELS
+===========================================================
+*/
+
+
+"derelict-one": {
+
+title: "Derelict ONE",
+
+category: "Contract Locations",
+
+subcategory: "Vessels",
+
+clearance: 0,
+
+content:
+`
+Derelict
+In space, no one can hear you scream. They can, however, potentially pick up the signal from your distress beacon if they pass within around 0.09 AUs of your location as your vessel drifts helplessly in the blackness of the intergalactic void. Whether you’ll still be alive (or human) when they arrive is another matter.
+
+Unfortunately (for the passengers of such ships) or fortunately (for scavengers, fortune hunters, or corporate opportunists) there are probably tens of thousands of derelict vessels floating around several million or several trillion miles off-course from the standard shipping/transport lanes, or in the widest possible orbits of some planetary system. Some of these vessels have been drifting untouched for centuries, haunted time-capsules from another age. Some have been commandeered by Reavers or even worse. Even if you have access to the ship’s original manifest and objective, there’s simply no telling what you might encounter on such a ship, or whether there’s anything on board worth surviving such encounters.
+`
+
+},
+
+"ins-ballista": {
+
+title: "INS Ballista",
+
+category: "Contract Locations",
+
+subcategory: "Vessels",
+
+clearance: 0,
+
+content:
+`
+INS Ballista
+A medium-sized gunship built around an oversized forward weapons array, with a dedicated reactor system feeding the primary cannons independently of the ship's other power demands. Internal space is weighted toward military operations, including barracks, a war room, and a small launch bay capable of carrying four strike or reconnaissance pods. Though primarily designed for combat, Ballistas are often fitted with basic data storage and research facilities to support extended deployments without dedicated support vessels.
+`
+
+},
+
+"ins-alpha-breaker": {
+
+title: "INS Alpha Breaker",
+
+category: "Contract Locations",
+
+subcategory: "Vessels",
+
+clearance: 0,
+
+content:
+`
+INS Alpha Breaker
+A medium troop-transport vessel designed to move personnel and equipment quickly between major staging areas and active operations. Increased crew capacity is supported by expanded life-support infrastructure, while its cargo sections are configured not just for storage but for processing and preparing military equipment prior to deployment. The Breaker carries engines and reactors more typical of ships roughly twice its size, giving it considerable speed despite its load. Although commonly associated with formal military logistics, it is also widely used by corporations, security organizations, and other non-sovereign entities conducting quasi-military operations. Basic data storage and chemical or medical laboratory spaces are common secondary fittings.
+`
+
+},
+
+"ins-origin-one": {
+
+title: "INS Origin ONE",
+
+category: "Contract Locations",
+
+subcategory: "Vessels",
+
+clearance: 0,
+
+content:
+`
+INS Origin One
+A large general-purpose cruiser, big enough to accommodate a full crew and security detachment and a substantial cargo hold. Equipped by default with massive data storage sections, material processing areas, and containment cells, the Origin is the workhorse of the major shipping/transport lanes. It's also capable of being retrofitted for different purposes, expanding inward to haul more cargo, or sacrificing cargo and data storage to become a minor colony or refugee vessel.
+`
+
+},
+
+
+
 };
