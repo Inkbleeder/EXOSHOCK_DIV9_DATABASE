@@ -745,6 +745,12 @@ async function processQueue(){
 
         }
 
+        else if(/https?:\/\//.test(item.text)){
+
+            line.innerHTML = linkifyHTML(item.text);
+
+        }
+
 
         item.resolve();
 
@@ -782,6 +788,44 @@ function escapeHTML(text){
 
 }
 
+
+// Escapes a line's text and wraps any http(s) URL in a real,
+// clickable link (opens in a new tab). Used by processQueue()
+// once a line finishes typing, so entries like the Discord
+// server link actually work. Written without innerHTML of raw
+// text - everything outside the <a> tags goes through
+// escapeHTML first.
+function linkifyHTML(text){
+
+    let result = "";
+
+    let last = 0;
+
+    let urlPattern = /https?:\/\/[^\s<>"']+/g;
+
+    let match;
+
+    while((match = urlPattern.exec(text)) !== null){
+
+        let url = match[0];
+
+        result += escapeHTML(text.slice(last, match.index));
+
+        result +=
+            `<a class="terminal-link" href="${escapeHTML(url)}"`
+            + ` target="_blank" rel="noopener noreferrer">`
+            + escapeHTML(url)
+            + `</a>`;
+
+        last = match.index + url.length;
+
+    }
+
+    result += escapeHTML(text.slice(last));
+
+    return result;
+
+}
 
 function highlightHTML(text, term){
 
