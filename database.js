@@ -2576,7 +2576,7 @@ You've found the database. Now become part of it.
 
 The EXOSHOCK Database is more than an archive. It's an evolving collection of information, discoveries, theories and stories - and its network extends beyond this terminal.
 
-Connect to the dedicated EXOSHOCK Discord server to:
+Connect to the dedicated EXOSHOCK Database Discord server to:
 
 SUBMIT FEEDBACK - Leave comments, suggestions, corrections and ideas to help improve the database.
 EXPAND THE ARCHIVE - Write, share and read fanfiction. Selected community contributions may even find their way into the database itself.
