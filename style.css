@@ -1540,3 +1540,21 @@ html, body, *{
     height:0;
     background:transparent;
 }
+
+/* ===========================================================
+   Terminal Links (e.g. Exsternal Resources > Discord link)
+   =========================================================== */
+
+.terminal-link{
+    color:var(--blue);
+    text-decoration:underline;
+    cursor:pointer;
+    word-break:break-all;
+}
+
+.terminal-link:hover,
+.terminal-link:focus{
+    background:var(--green);
+    color:var(--bg);
+    outline:none;
+}
