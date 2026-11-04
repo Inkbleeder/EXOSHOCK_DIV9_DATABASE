@@ -2578,10 +2578,10 @@ The EXOSHOCK Database is more than an archive. It's an evolving collection of in
 
 Connect to the dedicated EXOSHOCK Database Discord server to:
 
-SUBMIT FEEDBACK - Leave comments, suggestions, corrections and ideas to help improve the database.
+SUBMIT FEEDBACK - Leave comments, suggestions, bug-reports and ideas to help improve the database.
 EXPAND THE ARCHIVE - Write, share and read fanfiction. Selected community contributions may even find their way into the database itself.
 EXCHANGE INTELLIGENCE - Discuss EXOSHOCK lore, share theories and compare discoveries.
-DECRYPT THE UNKNOWN - Collaborate on the mysteries, secrets and puzzles hidden across the Main and Sister Sites.
+DECRYPT THE UNKNOWN - Collaborate on the mysteries, secrets and puzzles hidden across the Main Site.
 ESTABLISH CONTACT - Meet other explorers, archive enthusiasts and fellow inhabitants of the EXOSHOCK universe.
 
 [ CONNECTION AVAILABLE ]
